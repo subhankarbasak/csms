@@ -16,12 +16,12 @@ class Is_Admin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // return $next($request);
-		if(Auth::check() && Auth::user()->role_users_id == 1){
+        return $next($request);
+		// if(Auth::check() && Auth::user()->role_users_id == 1){
 
-			return $next($request);
-		}
+		// 	return $next($request);
+		// }
 
-        return redirect("/dashboard/admin");
+        // return redirect("/dashboard/admin");
     }
 }

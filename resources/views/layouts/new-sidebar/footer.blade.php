@@ -7,7 +7,7 @@
             <div class="footer-bottom border-top pt-3 d-flex flex-column flex-sm-row align-items-center">
                 <img class="logo" src="{{asset('images/'.$setting->logo)}}" alt="">
                 <div>
-                    <p class="m-0">&copy; <?php echo date ('Y'); ?>  {{$setting->developed_by}} v1.2</p>
+                    <p class="m-0">&copy; <?php echo date ('Y'); ?>  {{$setting->developed_by}} v1.0</p>
                     <p class="m-0">{{ __('translate.All rights reserved') }}</p>
                 </div>
             </div>
