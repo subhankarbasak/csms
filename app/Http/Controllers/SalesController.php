@@ -299,7 +299,7 @@ class SalesController extends Controller
             }
 
             $clients = client::where('deleted_at', '=', null)
-            ->get(['id', 'username']);
+            ->get(['id', 'username', 'phone']);
 
             return view('sales.create_sale',
                 [

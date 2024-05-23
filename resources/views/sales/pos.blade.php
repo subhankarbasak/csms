@@ -862,16 +862,16 @@
               if (!success) {
                 NProgress.done();
                 if (this.sale.client_id == "" || this.sale.client_id === null) {
-                  toastr.error('Veuillez choisir le client');
+                  toastr.error('Please choose customer');
                   
                 } else if (
                   this.sale.warehouse_id == "" ||
                   this.sale.warehouse_id === null
                 ) {
-                  toastr.error('Veuillez choisir le Magasin');
+                  toastr.error('Please choose Store');
                   
                 } else {
-                  toastr.error('Veuillez remplir correctement le formulaire');
+                  toastr.error('Please complete the form correctly');
                 }
               } else {
                 if (this.verifiedForm()) {
