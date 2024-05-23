@@ -176,7 +176,7 @@
                                             placeholder="{{ __('translate.Paying_Amount') }}" type="text"
                                             class="form-control">
                                         <div class="error">@{{ validationContext.errors[0] }}</div>
-                                        <span class="badge badge-danger">reste à payer : {{$currency}} @{{ total_debt }}</span>
+                                        <span class="badge badge-danger">left to pay : {{$currency}} @{{ total_debt }}</span>
                                     </validation-provider>
                                 </div>
     
@@ -278,7 +278,7 @@
                                             placeholder="{{ __('translate.Paying_Amount') }}" type="text"
                                             class="form-control">
                                         <div class="error">@{{ validationContext.errors[0] }}</div>
-                                        <span class="badge badge-danger">reste à payer : {{$currency}} @{{ return_due }}</span>
+                                        <span class="badge badge-danger">left to pay : {{$currency}} @{{ return_due }}</span>
                                     </validation-provider>
                                 </div>
 
@@ -508,7 +508,7 @@
                 if(app.total_debt > 0){
                     $('#add_payment_purchase').modal('show');
                 }else{
-                    toastr.warning('Pas de dettes');
+                    toastr.warning('No Dues');
                 }
             }, 1000);
         });
@@ -533,7 +533,7 @@
                 if(app.return_due > 0){
                     $('#add_payment_return').modal('show');
                 }else{
-                    toastr.warning('Pas de dettes');
+                    toastr.warning('No Dues');
                 }
             }, 1000);
         });

@@ -106,20 +106,23 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-if="details.length <=0">
+                      <tr v-if="details.length <= 0">
                         <td colspan="9">{{ __('translate.No_data_Available') }}</td>
                       </tr>
-                      <tr v-for="detail in details" :class="{ tr_back_error: detail.quantity < detail.qty_min }">
-                        <td>@{{detail.detail_id}}</td>
+                      <tr v-for="detail in details" :class="{ tr_back_error: detail.quantity < detail.qty_min }" :key="detail.detail_id">
+                        <td>@{{ detail.detail_id }}</td>
                         <td>
-                          <span>@{{detail.code}}</span>
+                          <span>@{{ detail.code }}</span>
                           <br>
-                          <span class="badge badge-success">@{{detail.name}}</span>
+                          <span class="badge badge-success">@{{ detail.name }}</span>
                         </td>
-                        <td>{{$currency}} @{{formatNumber(detail.Net_price, 2)}}</td>
+                        <td>
+                          {{$currency}} 
+                          <input type="number" class="form-control" v-model.number="detail.Unit_price" @change="updateDetail(detail)">
+                        </td>
                         <td>
                           <span class="badge badge-warning" v-if="detail.product_type == 'is_service'">----</span>
-                          <span class="badge badge-warning" v-else>@{{detail.stock}} @{{detail.unitSale}}</span>
+                          <span class="badge badge-warning" v-else>@{{ detail.stock }} @{{ detail.unitSale }}</span>
                         </td>
                         <td>
                           <div class="d-flex align-items-center">
@@ -128,22 +131,31 @@
                             <input class="fw-semibold cart-qty m-0 px-2"
                               @keyup="Verified_Qty(detail,detail.detail_id)" :min="0.00" :max="detail.stock"
                               v-model.number="detail.quantity">
-  
+
                             <span class="increment-decrement btn btn-light rounded-circle"
                               @click="increment(detail ,detail.detail_id)">+</span>
                           </div>
                         </td>
-
-                        <td>{{$currency}} @{{formatNumber(detail.DiscountNet * detail.quantity, 2)}}</td>
-                        <td>{{$currency}} @{{formatNumber(detail.taxe * detail.quantity, 2)}}</td>
-                        <td>{{$currency}} @{{detail.subtotal.toFixed(2)}}</td>
                         <td>
-                          <a @click="Modal_Updat_Detail(detail)" class="cursor-pointer ul-link-action text-success"
-                            title="Edit">
+                          <input type="number" class="form-control" v-model.number="detail.discount" @change="updateDetail(detail)">
+                          <select class="form-control mt-2" v-model="detail.discount_Method" @change="updateDetail(detail)">
+                            <option value="1">Percentage</option>
+                            <option value="2">Fixed</option>
+                          </select>
+                        </td>
+                        <td>
+                          <input type="number" class="form-control" v-model.number="detail.tax_percent" @change="updateDetail(detail)">
+                          <select class="form-control mt-2" v-model="detail.tax_method" @change="updateDetail(detail)">
+                            <option value="1">Exclusive</option>
+                            <option value="2">Inclusive</option>
+                          </select>
+                        </td>
+                        <td>{{$currency}} @{{ formatNumber(detail.subtotal, 2) }}</td>
+                        <td>
+                          <a @click="Modal_Updat_Detail(detail)" class="cursor-pointer ul-link-action text-success" title="Edit">
                             <i class="i-Edit"></i>
                           </a>
-                          <a @click="delete_Product_Detail(detail.detail_id)"
-                            class="cursor-pointer ul-link-action text-danger" title="Delete">
+                          <a @click="delete_Product_Detail(detail.detail_id)" class="cursor-pointer ul-link-action text-danger" title="Delete">
                             <i class="i-Close-Window"></i>
                           </a>
                         </td>
@@ -631,6 +643,72 @@
       }, 1000);
     },
 
+    // Subhankar
+
+    updateDetail(detail) {
+      for (var i = 0; i < this.details.length; i++) {
+        if (this.details[i].detail_id === detail.detail_id) {
+          for (var k = 0; k < this.units.length; k++) {
+            if (this.units[k].id == detail.sale_unit_id) {
+              if (this.units[k].operator == '/') {
+                this.details[i].stock = detail.fix_stock * this.units[k].operator_value;
+                this.details[i].unitSale = this.units[k].ShortName;
+              } else {
+                this.details[i].stock = detail.fix_stock / this.units[k].operator_value;
+                this.details[i].unitSale = this.units[k].ShortName;
+              }
+            }
+          }
+          if (this.details[i].stock < detail.quantity) {
+            this.details[i].quantity = this.details[i].stock;
+          } else {
+            this.details[i].quantity = 1;
+          }
+
+          detail.Unit_price = Number((detail.Unit_price).toFixed(2));
+
+          this.details[i].Unit_price = detail.Unit_price;
+          this.details[i].tax_percent = detail.tax_percent;
+          this.details[i].tax_method = detail.tax_method;
+          this.details[i].discount_Method = detail.discount_Method;
+          this.details[i].discount = detail.discount;
+          this.details[i].sale_unit_id = detail.sale_unit_id;
+          this.details[i].imei_number = detail.imei_number;
+
+          if (this.details[i].discount_Method == "2") {
+            // Fixed
+            this.details[i].DiscountNet = this.details[i].discount;
+          } else {
+            // Percentage %
+            this.details[i].DiscountNet = parseFloat(
+              (this.details[i].Unit_price * this.details[i].discount) / 100
+            );
+          }
+          if (this.details[i].tax_method == "1") {
+            // Exclusive
+            this.details[i].Net_price = parseFloat(
+              this.details[i].Unit_price - this.details[i].DiscountNet
+            );
+            this.details[i].taxe = parseFloat(
+              (this.details[i].tax_percent * (this.details[i].Unit_price - this.details[i].DiscountNet)) / 100
+            );
+          } else {
+            // Inclusive
+            this.details[i].Net_price = parseFloat(
+              (this.details[i].Unit_price - this.details[i].DiscountNet) /
+              (this.details[i].tax_percent / 100 + 1)
+            );
+            this.details[i].taxe = parseFloat(
+              this.details[i].Unit_price - this.details[i].Net_price - this.details[i].DiscountNet
+            );
+          }
+          this.details[i].subtotal = detail.Net_price * detail.quantity;
+        }
+      }
+      this.$forceUpdate();
+      this.Calcul_Total();
+    },
+
     
     // Search Products
     search(){
@@ -745,7 +823,7 @@
         this.product.detail_id = 1;
       }
       if(this.product.qty_min > this.product.fix_stock){
-          toastr.error('Qté minimum de vente est '+ ' ' + '('+this.product.qty_min + ' ' + this.product.unitSale+')' + ' '+ 'Mais n\'est pas suffisant en stock');
+          toastr.error('Minimum sales quantity is '+ ' ' + '('+this.product.qty_min + ' ' + this.product.unitSale+')' + ' '+ 'But n\'is not enough in stock');
         }else{
         this.details.push(this.product);
       }
@@ -879,7 +957,7 @@
         //-- check Qty of  details order if Null or zero
         verifiedForm() {
             if (this.details.length <= 0) {
-              toastr.error('Veuillez ajouter le produit');
+              toastr.error('Please add the product');
               return false;
             } else {
               var count = 0;
@@ -890,11 +968,11 @@
                   this.details[i].quantity === 0
                 ) {
                   // count += 1;
-                  toastr.error('veuillez ajouter la quantité au produit');
+                  toastr.error('please add the quantity to the product');
                   return false;
                 }
                 else if(this.details[i].quantity < this.details[i].qty_min){
-                  toastr.error('La quantité minimale de vente pour le produit' + ' ' + this.details[i].name + '  est' + ' '+ this.details[i].qty_min +' ' + this.details[i].unitSale);
+                  toastr.error('The minimum sales quantity for the product' + ' ' + this.details[i].name + '  is' + ' '+ this.details[i].qty_min +' ' + this.details[i].unitSale);
                   return false;
                 }
               }

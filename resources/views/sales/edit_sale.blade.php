@@ -678,7 +678,7 @@
         this.product.detail_id = 1;
       }
       if(this.product.qty_min > this.product.fix_stock){
-          toastr.error('Qté minimum de vente est '+ ' ' + '('+this.product.qty_min + ' ' + this.product.unitSale+')' + ' '+ 'Mais n\'est pas suffisant en stock');
+          toastr.error('Minimum sales quantity is '+ ' ' + '('+this.product.qty_min + ' ' + this.product.unitSale+')' + ' '+ 'But \'is not enough in stock');
         }else{
         this.details.push(this.product);
       }
@@ -867,7 +867,7 @@
         //-- check Qty of  details order if Null or zero
         verifiedForm() {
           if (this.details.length <= 0) {
-              toastr.error('Veuillez ajouter le produit');
+              toastr.error('Please add the product');
               return false;
             } else {
               var count = 0;
@@ -882,7 +882,7 @@
                   return false;
                 }
                 else if(this.details[i].quantity < this.details[i].qty_min){
-                  toastr.error('La quantité minimale de vente pour le produit' + ' ' + this.details[i].name + '  est' + ' '+ this.details[i].qty_min +' ' + this.details[i].unitSale);
+                  toastr.error('The minimum sales quantity for the product' + ' ' + this.details[i].name + '  is' + ' '+ this.details[i].qty_min +' ' + this.details[i].unitSale);
                   return false;
                 }
               }

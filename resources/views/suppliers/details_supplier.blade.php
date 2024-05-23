@@ -91,7 +91,7 @@
                         <div class="card-body text-center">
                             <i class="i-Financial"></i>
                             <div class="content">
-                                <p class="text-muted mt-2 mb-2">{{ __('translate.Total debt') }}</p>
+                                <p class="text-muted mt-2 mb-2">{{ __('translate.Total Due') }}</p>
                                 <p class="text-primary text-24 line-height-1 m-0">
                                     {{$supplier_data['total_debt']}}</p>
                             </div>

@@ -893,10 +893,10 @@
          Submit_Payment() {
               this.$refs.add_payment_sale.validate().then(success => {
                   if (!success) {
-                  toastr.error('Veuillez remplir correctement le formulaire');
+                  toastr.error('Please complete the form correctly');
                   }
                   else if (this.payment.montant > this.GrandTotal) {
-                      toastr.error('Le montant à payer est supérieur au total à payer');
+                      toastr.error('The amount to be paid is greater than the total to be paid');
                       this.payment.montant = 0;
                   }else{
                       this.CreatePOS();
@@ -911,7 +911,7 @@
                   this.payment.montant = 0;
                   
               } else if (this.payment.montant > this.GrandTotal) {
-                  toastr.warning('Le montant à payer est supérieur au total à payer');
+                  toastr.warning('The amount to be paid is greater than the total to be paid');
                   this.payment.montant = 0;
               } 
           },
@@ -935,7 +935,7 @@
             this.$refs.Create_Customer.validate().then(success => {
               if (!success) {
                 NProgress.done();
-                toastr.error('Veuillez remplir correctement le formulaire');
+                toastr.error('Please complete the form correctly');
               } else {
                 this.Create_Client();
               }

@@ -422,7 +422,7 @@
                 if(app.sell_due > 0){
                     $('#add_payment_sale').modal('show');
                 }else{
-                    toastr.warning('Pas de dettes');
+                    toastr.warning('No Dues');
                 }
             }, 1000);
         });
@@ -447,7 +447,7 @@
                 if(app.return_due > 0){
                     $('#add_payment_return').modal('show');
                 }else{
-                    toastr.warning('Pas de dettes');
+                    toastr.warning('No Dues');
                 }
             }, 1000);
         });
