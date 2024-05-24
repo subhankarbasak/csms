@@ -307,24 +307,36 @@ class UserController extends Controller
     public function assignRole(Request $request)
     {
         $user_auth = auth()->user();
-        if ($user_auth->can('group_permission')){
-            
-            //remove role
+        if ($user_auth->can('group_permission')) {
+    
+            // Validate the request
+            $request->validate([
+                'user_id' => 'required|exists:users,id',
+                'role_id' => 'required|exists:roles,id',
+            ]);
+    
+            // Get the user
             $get_user = User::find($request->user_id);
-            $get_user->removeRole($get_user->role_users_id);
-
-            User::whereId($request->user_id)->update([
+    
+            // Remove the current role
+            $currentRoleName = \Spatie\Permission\Models\Role::findById($get_user->role_users_id)->name;
+            $get_user->removeRole($currentRoleName);
+    
+            // Update the role_users_id
+            $get_user->update([
                 'role_users_id' => $request->role_id,
             ]);
-
-            $user_updated = User::find($request->user_id);
-            $user_updated->assignRole($request->role_id);
-
+    
+            // Assign the new role
+            $newRoleName = \Spatie\Permission\Models\Role::findById($request->role_id)->name;
+            $get_user->assignRole($newRoleName);
+    
             return response()->json(['success' => true]);
-
         }
+    
         return abort('403', __('You are not authorized'));
     }
+    
 
  
 }
