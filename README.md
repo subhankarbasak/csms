@@ -1,6 +1,31 @@
 # csms
 Customized Stock Management System by Lightangle Technologies
 
+## Installation Steps
+
+1. Clone the repository using CMD or VS Code Editor by running the command:  
+   `git clone https://github.com/subhankarbasak/csms.git`
+2. Open a terminal or CMD in the repository directory and run the following commands one by one:
+   1. `composer install`
+   2. `cp .env.example .env`
+   3. Add database credentials in the `.env` file
+   4. `php artisan key:generate`
+   5. `npm install`
+   6. `npm run build`
+   7. `php artisan migrate`
+   8. `php artisan db:seed` OR `php artisan db:seed --class=YourSeederClassName`
+   9. `php artisan serve`
+
+## Run the Application
+
+Now, open this link [http://127.0.0.1:8000](http://127.0.0.1:8000) in any web browser and enter the credentials as given below:
+
+## Login as Administrator
+
+- **Email:** admin@admin.com
+- **Password:** 12345678
+
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
