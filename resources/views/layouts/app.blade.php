@@ -7,7 +7,10 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'CSMS') }}</title>    
+    <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,400i,600,700,800,900" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('assets/styles/css/themes/lite-purple.min.css') }}">
+    <link rel="stylesheet" href="{{asset('assets/styles/vendor/login_page.css')}}">
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
@@ -21,7 +24,7 @@
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
+                    {{ config('app.name', 'CSMS') }}
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -76,5 +79,21 @@
             @yield('content')
         </main>
     </div>
+
+      <!-- JS Libraies -->
+  <script src="{{ asset('/assets/js/jquery.js') }}"></script>
+  <script src="{{ asset('/assets/js/popper.min.js') }}"></script>
+  <script src="{{ asset('/assets/js/bootstrap.min.js') }}"></script>
+  <script src="{{ asset('/assets/js/scripts.js') }}"></script>
+  <script src="{{ asset('/assets/js/custom.js') }}"></script>
+
+  <script>
+    $(function () {
+      $("#form_login").one("submit", function () {
+      //enter your submit code
+      $("#btn_submit").prop('disabled', true);
+      });
+    });
+  </script>
 </body>
 </html>

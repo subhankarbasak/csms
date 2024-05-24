@@ -8,8 +8,15 @@
                 <div class="card-header">{{ __('Login') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}">
+                    <form class="theme-form" id="form_login" method="POST" action="{{ route('login') }}">
                         @csrf
+                        <span class="text-center">
+                            <div class="auth-logo text-center mb-4">
+                                <img src="{{asset('images/logo.svg')}}" alt="">
+                            </div>
+                        <h4>{{ __('translate.Sign_in_to_account') }}</h4>
+                        <p>{{ __('translate.Enter_your_email_password_to_login') }}</p>
+                        </span>
 
                         <div class="row mb-3">
                             <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
@@ -53,7 +60,7 @@
 
                         <div class="row mb-0">
                             <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
+                                <button id="btn_submit" type="submit" class="btn btn-primary">
                                     {{ __('Login') }}
                                 </button>
 

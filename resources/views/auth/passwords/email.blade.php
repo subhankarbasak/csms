@@ -6,6 +6,9 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">{{ __('Reset Password') }}</div>
+                    <div class="auth-logo text-center mb-4">
+                        <img src="{{asset('images/logo.svg')}}" alt="">
+                    </div>
 
                 <div class="card-body">
                     @if (session('status'))
