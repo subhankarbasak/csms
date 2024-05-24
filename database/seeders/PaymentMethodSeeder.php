@@ -17,13 +17,13 @@ class PaymentMethodSeeder extends Seeder
         DB::table('payment_methods')->insert(
             array([
                 'id'           => 1,
-                'title'        => 'Other Payment Method',
+                'title'        => 'Debit Card',
                 'is_default'   => 0,
 
             ],
             [
                 'id'           => 2,
-                'title'        => 'Paypal',
+                'title'        => 'UPI',
                 'is_default'   => 1,
 
             ],
@@ -41,7 +41,7 @@ class PaymentMethodSeeder extends Seeder
             ],
             [
                 'id'           => 5,
-                'title'        => 'Check',
+                'title'        => 'Cheque',
                 'is_default'   => 0,
 
             ],
