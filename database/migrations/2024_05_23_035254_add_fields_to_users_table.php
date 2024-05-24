@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             //
-            $table->string('username', 192);
+            // $table->string('username', 192);
 			$table->string('avatar', 192)->nullable();
 			$table->boolean('status')->default(1);
 			$table->bigInteger('role_users_id')->unsigned()->index('users_role_users_id');
