@@ -431,7 +431,7 @@ return [
     'Profit' => 'Profit',
     'Revenue' => 'Revenue',
     'Sales_today' => 'Today Sales',
-    'People' => 'People',
+    'People' => 'Customer',
     'Successfully_Created' => 'Successfully Created',
     'Successfully_Updated' => 'Successfully Updated',
     'Success' => 'Success',
@@ -854,7 +854,7 @@ return [
     'ListPurchases' => 'All Purchases',
     'ListSales' => 'All Sales',
     'ListReturns' => 'All Returns',
-    'PeopleManager' => 'People Management',
+    'PeopleManager' => 'Customer Management',
 
     //sweet Alert
     'Delete' => [
@@ -1313,8 +1313,8 @@ return [
     'Choose_status' => 'Choose status',
     'Choose_type' => 'Choose type',
     'City' => 'City',
-    'Client' => 'Client',
-    'Client_List' => 'Client list',
+    'Client' => 'Customer',
+    'Client_List' => 'Customer list',
     'Code' => 'Code',
     'Comment' => 'Comment',
     'Clients' => 'Clients',

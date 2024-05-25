@@ -244,7 +244,7 @@
                   <div class="input-group">
                     <input :state="getValidationState(validationContext)" aria-describedby="Shipping-feedback"
                       v-model.number="sale.shipping" @keyup="keyup_Shipping()" type="text" class="form-control">
-                      <span class="input-group-text">$</span>
+                      <span class="input-group-text">₹</span>
                   </div>
                   <span class="error">@{{ validationContext.errors[0] }}</span>
                 </validation-provider>
