@@ -26,7 +26,7 @@
             <p class="p-0 m-0 text-gray-600 font_14">
               {{ __('translate.what_happening_with_your_store') }}
             </p>
-            <div class="dashboard_today_purchases">
+            <div class="dashboard_today_purchases d-none">
               <h4 class="fw-semibold fs-4 mb-1">
                  {{$today_purchases}}
               </h4>
@@ -46,7 +46,7 @@
           <img class="pe-lg-3" width="194" height="170" src="{{asset('images/overview.png')}}" alt="">
         </div>
       </div>
-      <div class="col-lg-6 col-md-12">
+      <div class="col-lg-6 col-md-12 d-none">
         <div class="row">
           <div class="col-md-6 col-sm-6">
             <a href="/sale/sales" class="card_dashboard">
@@ -106,7 +106,7 @@
       </div>
     </div>
 
-    <div class="row align-items-center">
+    <div class="row align-items-center d-none">
       <div class="col-lg-8 col-md-12">
         <div class="card mb-4">
           <div class="card-body">
@@ -134,7 +134,7 @@
       </div>
     </div>
 
-    <div class="row">
+    <div class="row d-none">
       <div class="col-md-8">
         <div class="card">
           <div class="card-header">
