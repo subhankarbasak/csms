@@ -18,21 +18,70 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         DB::table('users')->insert([
-            'id' => 1,
-            'username' => 'Admin',
-            'email' => 'admin@admin.com',
-            'email_verified_at' => null,
-            'avatar' => 'no_avatar.png',
-            'status' => 1,
-            'role_users_id' => 1,
-            'is_all_warehouses' => 1,
-            'password' => Hash::make('12345678'),
-            'remember_token' => null,
-            'created_at' => '2024-05-23 08:04:03',
-            'updated_at' => null,
-            'deleted_at' => null,
+            [
+                'id' => 1,
+                'username' => 'Super Admin',
+                'email' => 'superadmin@admin.com',
+                'email_verified_at' => null,
+                'avatar' => 'no_avatar.png',
+                'status' => 0,
+                'role_users_id' => 1,
+                'is_all_warehouses' => 1,
+                'password' => Hash::make('12345678'),
+            ],
+            [
+                'id' => 2,
+                'username' => 'Admin',
+                'email' => 'admin@admin.com',
+                'email_verified_at' => null,
+                'avatar' => 'no_avatar.png',
+                'status' => 1,
+                'role_users_id' => 2,
+                'is_all_warehouses' => 1,
+                'password' => Hash::make('12345678'),
+            ],
+            [
+                'id' => 3,
+                'username' => 'Manager',
+                'email' => 'manager@admin.com',
+                'email_verified_at' => null,
+                'avatar' => 'no_avatar.png',
+                'status' => 1,
+                'role_users_id' => 3,
+                'is_all_warehouses' => 1,
+                'password' => Hash::make('12345678'),
+            ],
+            [
+                'id' => 4,
+                'username' => 'Salesman',
+                'email' => 'seller@admin.com',
+                'email_verified_at' => null,
+                'avatar' => 'no_avatar.png',
+                'status' => 1,
+                'role_users_id' => 4,
+                'is_all_warehouses' => 1,
+                'password' => Hash::make('12345678'),
+            ],
         ]);
-        $user = User::findOrFail(1);
-        $user->assignRole(1);
+
+        // $user = User::findOrFail(1);
+        // $user->assignRole(1);
+
+        // Assign roles to users
+        $usersRoles = [
+            1 => 'Super Admin',  // Assuming roles are named 'Super Admin', 'Admin', 'Manager', 'Salesman'
+            2 => 'Admin',
+            3 => 'Manager',
+            4 => 'Seller'
+        ];
+
+        foreach ($usersRoles as $userId => $roleName) {
+            $user = User::findOrFail($userId);
+            $user->assignRole($roleName);
+        }
     }
 }
+
+// To run the seeder, use the following artisan command:
+// php artisan db:seed --class=UserSeeder
+

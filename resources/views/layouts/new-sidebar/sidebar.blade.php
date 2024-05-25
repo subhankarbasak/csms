@@ -66,12 +66,14 @@
                                 </li>
                             @endcan
                             @can('group_permission')
-                                <li class="">
-                                    @include('components.sidebar.child-navitem', [
-                                        'href'=>'/user-management/permissions', 
-                                        'title'=> __('translate.Roles')
-                                    ])
-                                </li>
+                                @if (auth()->user()->role_users_id == 1)
+                                    <li class="">
+                                        @include('components.sidebar.child-navitem', [
+                                            'href'=>'/user-management/permissions', 
+                                            'title'=> __('translate.Roles')
+                                        ])
+                                    </li>
+                                @endif
                             @endcan
                         </ul>
                     </div>

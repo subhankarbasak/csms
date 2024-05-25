@@ -23,7 +23,7 @@ class ProfileController extends Controller
     public function index()
     {
         $user_auth = auth()->user();
-        if ($user_auth->role_users_id == 1){
+        if ($user_auth->role_users_id != null){
             $user['id'] = Auth::user()->id;
             $user['username'] = Auth::user()->username;
             $user['firstname'] = Auth::user()->firstname;

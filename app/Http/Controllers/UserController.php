@@ -29,7 +29,12 @@ class UserController extends Controller
 		if ($user_auth->can('user_view')){
 
             $roles = Role::where('deleted_at', '=', null)->get(['id','name']);
-            $users = User::where('deleted_at', '=', null)->with('RoleUser')->orderBy('id', 'desc')->get();
+            $users = User::where('deleted_at', '=', null)
+             ->where('status', '=', 1)
+             ->with('RoleUser')
+             ->orderBy('id', 'desc')
+             ->get();
+            // $users = User::where('deleted_at', '=', null)->with('RoleUser')->orderBy('id', 'desc')->get();
             $warehouses = Warehouse::where('deleted_at', '=', null)->get(['id', 'name']);
 
             return view('user.user_list', compact('users','roles','warehouses'));
