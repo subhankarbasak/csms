@@ -110,7 +110,7 @@
                 <div class="card-body">
                     <div class="row">
 
-                    <div class="form-group col-md-4 mb-3" v-if="product.type == 'is_single'">
+                    <div class="form-group col-md-4 mb-3 d-none" v-if="product.type == 'is_single'">
                             <label for="type" >{{ __('translate.Product_Type') }} <span class="field_required">*</span></label>
                             <input type="text" class="form-control" id="type" placeholder="Standard Product"
                                 value="Standard Product" disabled>
@@ -267,7 +267,7 @@
                 <div class="card-body">
 
                     <!-- Product_Has_Imei_Serial_number -->
-                    <div class="col-md-12 mb-2">
+                    <div class="col-md-12 mb-2 d-none">
                         <div class="form-check form-check-inline">
                             <label class="checkbox checkbox-primary" for="is_imei">
                                 <input type="checkbox" id="is_imei" v-model="product.is_imei">

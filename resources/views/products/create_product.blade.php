@@ -113,7 +113,7 @@
             <div class="card mt-5">
                 <div class="card-body">
                     <div class="row">
-                        <div class="form-group col-md-4 mb-3">
+                        <div class="form-group col-md-4 mb-3 d-none">
                             <label>{{ __('translate.Product_Type') }} <span class="field_required">*</span></label>
                             <v-select placeholder="Product Type" v-model="product.type"
                                 :reduce="(option) => option.value" :options="
@@ -252,7 +252,7 @@
                 </div>
             </div>
 
-            <div class="card mt-5">
+            <div class="card mt-5 d-none">
                 <div class="card-body">
 
                     <!-- Product_Has_Imei_Serial_number -->
