@@ -386,6 +386,123 @@
       </div>
     </div>
   </validation-observer>
+
+
+  <!-- Modal add sale payment -->
+  <validation-observer ref="add_payment_sale">
+    <div class="modal fade" id="add_payment_sale" tabindex="-1" role="dialog"
+      aria-labelledby="add_payment_sale" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">{{ __('translate.AddPayment') }}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form @submit.prevent="Submit_Payment()">
+              <div class="row">
+
+                  <div class="col-md-6">
+                      <validation-provider name="date" rules="required" v-slot="validationContext">
+                        <div class="form-group">
+                          <label for="picker3">{{ __('translate.Date') }}</label>
+      
+                          <input type="text" 
+                            :state="getValidationState(validationContext)" 
+                            aria-describedby="date-feedback" 
+                            class="form-control" 
+                            placeholder="{{ __('translate.Select_Date') }}"  
+                            id="datetimepicker" 
+                            v-model="payment.date">
+      
+                          <span class="error">@{{  validationContext.errors[0] }}</span>
+                        </div>
+                      </validation-provider>
+                    </div>
+
+                <!-- Paying_Amount -->
+                <div class="form-group col-md-6">
+                  <validation-provider name="Montant à payer"
+                    :rules="{ required: true , regex: /^\d*\.?\d*$/}" v-slot="validationContext">
+                    <label for="Paying_Amount">{{ __('translate.Paying_Amount') }}
+                      <span class="field_required">*</span></label>
+                    <input @keyup="Verified_paidAmount(payment.montant)"
+                      :state="getValidationState(validationContext)"
+                      aria-describedby="Paying_Amount-feedback" v-model.number="payment.montant"
+                      placeholder="{{ __('translate.Paying_Amount') }}" type="text" class="form-control">
+                    <div class="error">
+                      @{{ validationContext.errors[0] }}</div>
+
+                    @if($symbol_placement == 'before')
+                        <span class="badge badge-danger mt-2">{{ __('translate.Total') }} : {{$currency}}  @{{GrandTotal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}} </span>
+                    @else
+                        <span class="badge badge-danger mt-2">{{ __('translate.Total') }} : @{{GrandTotal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}} {{$currency}}</span>
+                    @endif
+
+                  </validation-provider>
+                </div>
+
+                <div class="form-group col-md-6">
+                  <validation-provider name="Payment choice" rules="required"
+                      v-slot="{ valid, errors }">
+                      <label> {{ __('translate.Payment_choice') }}<span
+                              class="field_required">*</span></label>
+                      <v-select @input="Selected_Payment_Method" 
+                            placeholder="{{ __('translate.Choose_Payment_Choice') }}"
+                          :class="{'is-invalid': !!errors.length}"
+                          :state="errors[0] ? false : (valid ? true : null)"
+                          v-model="payment.payment_method_id" :reduce="(option) => option.value" 
+                          :options="payment_methods.map(payment_methods => ({label: payment_methods.title, value: payment_methods.id}))">
+
+                      </v-select>
+                      <span class="error">@{{ errors[0] }}</span>
+                  </validation-provider>
+              </div>
+
+              <div class="form-group col-md-6">
+                  <label> {{ __('translate.Account') }} </label>
+                  <v-select 
+                        placeholder="{{ __('translate.Choose_Account') }}"
+                      v-model="payment.account_id" :reduce="(option) => option.value" 
+                      :options="accounts.map(accounts => ({label: accounts.account_name, value: accounts.id}))">
+
+                  </v-select>
+              </div>
+
+                <div class="form-group col-md-6">
+                  <label for="note">{{ __('translate.Payment_note') }}
+                  </label>
+                  <textarea type="text" v-model="payment.notes" class="form-control" name="note" id="note"
+                    placeholder="{{ __('translate.Payment_note') }}"></textarea>
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label for="note">{{ __('translate.sale_note') }}
+                  </label>
+                  <textarea type="text" v-model="sale.notes" class="form-control" name="note" id="note"
+                    placeholder="{{ __('translate.sale_note') }}"></textarea>
+                </div>
+              </div>
+
+              <div class="row mt-3">
+
+                <div class="col-lg-6">
+                  <button type="submit" class="btn btn-primary" :disabled="paymentProcessing">
+                    <span v-if="paymentProcessing" class="spinner-border spinner-border-sm" role="status"
+                      aria-hidden="true"></span> <i class="i-Yes me-2 font-weight-bold"></i>
+                    {{ __('translate.Submit') }}
+                  </button>
+
+                </div>
+
+              </div>
+
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </validation-observer>
 </div>
 
 <!-- Customer add Modal -->
@@ -500,7 +617,10 @@
           isLoading: true,
           warehouses:@json($warehouses),
           clients: @json($clients),
+          payment_methods:@json($payment_methods),
+          accounts:@json($accounts),
           client: {},
+          payments: [],
           products: [],
           details: [],
           detail: {},
@@ -518,6 +638,14 @@
             discount: 0,
             discount_type:"fixed",
             discount_percent_total: 0,
+          },
+          payment: {
+              date:moment().format('YYYY-MM-DD HH:mm'),
+              client_id: "",
+              montant: '',
+              notes: "",
+              payment_method_id: "",
+              account_id: "",
           },
           timer:null,
           total: 0,
@@ -558,6 +686,12 @@
        
     methods: {
 
+      Selected_Payment_Method(value) {
+            if (value === null) {
+                this.payment.payment_method_id = "";
+            }
+        },
+
       
      handleFocus() {
       this.focused = true
@@ -588,7 +722,7 @@
         if (!success) {
           toastr.error('{{ __('translate.Please_fill_the_form_correctly') }}');
         }else{
-          this.Create_Sale();
+          this.Submit_Pos();
         }
       });
     },
@@ -1096,6 +1230,48 @@
       }
     },
 
+
+      Submit_Pos() {    
+        if (this.verifiedForm()) {
+                      this.pay_now();
+                    } else {
+                      NProgress.done();
+                    }
+      },
+
+    pay_now(){
+        this.payment.montant = this.formatNumber(this.GrandTotal, 2);
+        $('#add_payment_sale').modal('show');
+        NProgress.done();
+    },
+
+    //------ Validate Form Submit_Payment
+    Submit_Payment() {
+        this.$refs.add_payment_sale.validate().then(success => {
+            if (!success) {
+            toastr.error('Please complete the form correctly');
+            }
+            else if (this.payment.montant > this.GrandTotal) {
+                toastr.error('The amount to be paid is greater than the total to be paid');
+                this.payment.montant = 0;
+            }else{
+                this.Create_Sale();
+            } 
+            
+        });
+    },
+
+    //---------- keyup paid montant
+    Verified_paidAmount() {
+        if (isNaN(this.payment.montant)) {
+            this.payment.montant = 0;
+            
+        } else if (this.payment.montant > this.GrandTotal) {
+            toastr.warning('The amount to be paid is greater than the total to be paid');
+            this.payment.montant = 0;
+        } 
+    },
+
     //--------------------------------- Create Sale -------------------------\\
     Create_Sale() {
       if (this.verifiedForm()) {
@@ -1118,6 +1294,10 @@
               shipping: this.sale.shipping?this.sale.shipping:0,
               GrandTotal: this.GrandTotal,
               details: this.details,
+              payment_method_id: this.payment.payment_method_id,
+              account_id: this.payment.account_id,
+              payment_notes: this.payment.notes,
+              montant : parseFloat(this.payment.montant).toFixed(2),
             })
             .then(response => {
               NProgress.done();

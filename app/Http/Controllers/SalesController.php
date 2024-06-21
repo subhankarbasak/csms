@@ -300,10 +300,14 @@ class SalesController extends Controller
 
             $clients = client::where('deleted_at', '=', null)
             ->get(['id', 'username', 'phone']);
+            $payment_methods = PaymentMethod::where('deleted_at', '=', null)->orderBy('id', 'desc')->get(['id','title']);
+            $accounts = Account::where('deleted_at', '=', null)->orderBy('id', 'desc')->get(['id','account_name']);
 
             return view('sales.create_sale',
                 [
                     'clients' => $clients,
+                    'payment_methods'    => $payment_methods,
+                    'accounts'           => $accounts,
                     'warehouses' => $warehouses,
                 ]
             );
@@ -401,12 +405,71 @@ class SalesController extends Controller
                 }
                 SaleDetail::insert($orderDetails);
 
+                if($request['montant'] > 0){
+    
+                    $sale = Sale::findOrFail($order->id);
+    
+                    $total_paid = $sale->paid_amount + $request['montant'];
+                    $due = $sale->GrandTotal - $total_paid;
+    
+                    if ($due === 0.0 || $due < 0.0) {
+                        $payment_statut = 'paid';
+                    } else if ($due != $sale->GrandTotal) {
+                        $payment_statut = 'partial';
+                    } else if ($due == $sale->GrandTotal) {
+                        $payment_statut = 'unpaid';
+                    }
+    
+                    PaymentSale::create([
+                        'sale_id'    => $order->id,
+                        'account_id' => $request['account_id']?$request['account_id']:NULL,
+                        'Ref'        => $this->generate_random_code_payment(),
+                        'date'       => $request['date'],
+                        'payment_method_id'  => $request['payment_method_id'],
+                        'montant'    => $request['montant'],
+                        'change'     => 0,
+                        'notes'      => $request['payment_notes'],
+                        'user_id'    => Auth::user()->id,
+                    ]);
+    
+                    $account = Account::where('id', $request['account_id'])->exists();
+    
+                    if ($account) {
+                        // Account exists, perform the update
+                        $account = Account::find($request['account_id']);
+                        $account->update([
+                            'initial_balance' => $account->initial_balance + $request['montant'],
+                        ]);
+                    }
+    
+                    $sale->update([
+                        'paid_amount' => $total_paid,
+                        'payment_statut' => $payment_statut,
+                    ]);
+    
+                }
+
             }, 10);
 
             return response()->json(['success' => true]);
 
         }
         return abort('403', __('You are not authorized'));
+    }
+
+
+
+    // generate_random_code_payment
+    public function generate_random_code_payment()
+    {
+        $gen_code = 'INV/SL-' . date("Ymd") . '-'. substr(number_format(time() * mt_rand(), 0, '', ''), 0, 6);
+
+        if (PaymentSale::where('Ref', $gen_code)->exists()) {
+            $this->generate_random_code_payment();
+        } else {
+            return $gen_code;
+        }
+        
     }
 
     /**
