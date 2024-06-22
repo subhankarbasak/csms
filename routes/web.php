@@ -366,3 +366,22 @@ Route::middleware([XSS::class])->group(function () {
 
     // End XSS middleware 
 });
+//Reoptimized class loader:
+Route::get('/optimize', function() {
+    $exitCode = Artisan::call('optimize');
+    return '<h1>Reoptimized class loader</h1>';
+});
+
+// Clear All at once
+
+Route::get('/clear', function() {
+
+    Artisan::call('cache:clear');
+    Artisan::call('config:clear');
+    Artisan::call('config:cache');
+    Artisan::call('view:clear');
+    Artisan::call('route:clear');
+
+    return "Cleared!";
+
+});
