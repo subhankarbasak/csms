@@ -19,12 +19,12 @@
       </a>
     @endif
 
-    <a @click="Sale_Email(sale.id)" class="btn-sm btn btn-info ripple btn-icon m-1">
+    <a @click="Sale_Email(sale.id)" class="btn-sm btn btn-info ripple btn-icon m-1 d-none">
       <i class="i-Envelope-2"></i>
       {{ __('translate.Send_Email') }}
     </a>
 
-    <a @click="Sale_SMS(sale.id)" class="btn-sm btn btn-info ripple btn-icon m-1">
+    <a @click="Sale_SMS(sale.id)" class="btn-sm btn btn-info ripple btn-icon m-1 d-none">
         <i class="i-Envelope-2"></i>
         {{ __('translate.Send_sms') }}
       </a>
@@ -82,7 +82,7 @@
               <span v-else class="badge badge-outline-warning">{{ __('translate.Unpaid') }}</span>
             </div>
             <div>{{ __('translate.date') }} : @{{sale.date}}</div>
-            <div>{{ __('translate.warehouse') }} : @{{sale.warehouse}}</div>
+            <div class="d-none">{{ __('translate.warehouse') }} : @{{sale.warehouse}}</div>
           </div>
 
         </div>

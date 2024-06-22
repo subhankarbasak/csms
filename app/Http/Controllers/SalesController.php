@@ -252,10 +252,12 @@ class SalesController extends Controller
                             $item['action'] .= '<a class="dropdown-item New_Payment cursor-pointer" payment_status="' .$sale->payment_statut. '"  id="' .$sale->id. '" > <i class="nav-icon i-Add font-weight-bold mr-2"></i> ' .trans('translate.AddPayment').'</a>';
                         }
 
-                        $item['action'] .= '<a class="dropdown-item" href="/invoice_pos/' .$sale->id. '" target=_blank> <i class="nav-icon i-File-TXT font-weight-bold mr-2"></i> ' .trans('translate.Invoice_POS').'</a>
-                        <a class="dropdown-item download_pdf cursor-pointer" Ref="' .$sale->Ref. '" id="' .$sale->id. '" ><i class="nav-icon i-File-TXT font-weight-bold mr-2"></i> ' .trans('translate.DownloadPdf').'</a>
-                        <a class="dropdown-item  send_email cursor-pointer" id="' .$sale->id. '" ><i class="nav-icon i-Envelope-2 font-weight-bold mr-2"></i> ' .trans('translate.EmailSale').'</a>
-                        <a class="dropdown-item  send_sms cursor-pointer" id="' .$sale->id. '" ><i class="nav-icon i-Envelope-2 font-weight-bold mr-2"></i> ' .trans('translate.Send_sms').'</a>';
+                        // <a class="dropdown-item" href="/invoice_pos/' .$sale->id. '" target=_blank> <i class="nav-icon i-File-TXT font-weight-bold mr-2"></i> ' .trans('translate.Invoice_POS').'</a>
+                        // <a class="dropdown-item  send_email cursor-pointer" id="' .$sale->id. '" ><i class="nav-icon i-Envelope-2 font-weight-bold mr-2"></i> ' .trans('translate.EmailSale').'</a>
+                        // <a class="dropdown-item  send_sms cursor-pointer" id="' .$sale->id. '" ><i class="nav-icon i-Envelope-2 font-weight-bold mr-2"></i> ' .trans('translate.Send_sms').'</a>
+
+                        $item['action'] .= '
+                        <a class="dropdown-item download_pdf cursor-pointer" Ref="' .$sale->Ref. '" id="' .$sale->id. '" ><i class="nav-icon i-File-TXT font-weight-bold mr-2"></i> ' .trans('translate.DownloadPdf').'</a>';
                         
                         //check if user has permission "sales_delete"
                         if ($user_auth->can('sales_delete') &&  $sale_has_return == 'no'){
