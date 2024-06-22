@@ -6,7 +6,9 @@ if(isset($_COOKIE['language']) &&  $_COOKIE['language'] == 'ar') {
 } else {
     $languageDirection = 'ltr' ;
 }
-		
+
+$css_path = '\assets\styles\vendor\pdf_style.css';
+$image_path = '\images\\'.$setting['logo'];
 ?>
 
 <!DOCTYPE html>
@@ -14,13 +16,13 @@ if(isset($_COOKIE['language']) &&  $_COOKIE['language'] == 'ar') {
    <head>
       <meta charset="utf-8">
       <title>{{$sale['Ref']}}</title>
-      <link rel="stylesheet" href="{{asset('assets/styles/vendor/pdf_style.css')}}">
+      <link rel="stylesheet" href="{{ public_path() . $css_path }}">
    </head>
 
    <body>
       <div class="clearfix">
          <div id="logo">
-         <img src="{{asset('images/'.$setting['logo'])}}">
+         <img src="{{ public_path() . $image_path }}">
          </div>
          <div id="company">
             <div><strong> {{ __('translate.Date') }} </strong>{{$sale['date']}}</div>

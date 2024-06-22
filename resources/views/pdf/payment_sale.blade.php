@@ -1,16 +1,21 @@
+<?php
+$css_path = '\assets\styles\vendor\pdf_style.css';
+$image_path = '\images\\'.$setting['logo'];
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
    <meta charset="utf-8">
    <title>{{$payment['Ref']}}</title>
-   <link rel="stylesheet" href="{{asset('assets/styles/vendor/pdf_style.css')}}">
+   <link rel="stylesheet" href="{{ public_path() . $css_path }}">
 </head>
 
 <body>
    <header class="clearfix">
       <div id="logo">
-         <img src="{{asset('/images/'.$setting['logo'])}}">
+         <img src="{{ public_path() . $image_path }}">
       </div>
       <div id="company">
          <div><strong> {{ __('translate.Date') }} </strong>{{$payment['date']}}</div>

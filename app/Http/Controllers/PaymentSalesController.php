@@ -343,13 +343,13 @@ class PaymentSalesController extends Controller
             'payment' => $payment_data,
         ])->render();
 
-        $arabic = new Arabic();
-        $p = $arabic->arIdentify($Html);
+        // $arabic = new Arabic();
+        // $p = $arabic->arIdentify($Html);
 
-        for ($i = count($p)-1; $i >= 0; $i-=2) {
-            $utf8ar = $arabic->utf8Glyphs(substr($Html, $p[$i-1], $p[$i] - $p[$i-1]));
-            $Html = substr_replace($Html, $utf8ar, $p[$i-1], $p[$i] - $p[$i-1]);
-        }
+        // for ($i = count($p)-1; $i >= 0; $i-=2) {
+        //     $utf8ar = $arabic->utf8Glyphs(substr($Html, $p[$i-1], $p[$i] - $p[$i-1]));
+        //     $Html = substr_replace($Html, $utf8ar, $p[$i-1], $p[$i] - $p[$i-1]);
+        // }
 
         $pdf = PDF::loadHTML($Html);
 
