@@ -8,7 +8,7 @@
 <div 
     x-data="{ isCompact: false }" 
     :class="isCompact ? 'compact' : ''" 
-    class="sidebar-content bg-gray-900 card rounded-0"
+    class="sidebar-content bg-light card rounded-0"
 >
     <div class="sidebar-header mb-5 d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
