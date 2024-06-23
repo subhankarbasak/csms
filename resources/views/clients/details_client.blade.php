@@ -44,9 +44,9 @@
                                 <th>{{ __('translate.Status') }}</th>
                                 <td>
                                     @if($client_data['status'] == 1)
-                                    <span class="badge badge-success">{{ __('translate.Active Client') }}</span>
+                                    <span class="badge badge-success">{{ __('translate.Active') }}</span>
                                     @else
-                                    <span class="badge badge-danger">{{ __('translate.Inactive Client') }}</span>
+                                    <span class="badge badge-danger">{{ __('translate.Inactive') }}</span>
                                     @endif
                                 </td>
                             </tr>
