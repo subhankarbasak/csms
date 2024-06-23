@@ -21,7 +21,7 @@
         <div class="card p-4 d-flex flex-row align-items-center justify-content-between">
           <div>
             <p class="text-primary fw-semibold mb-1 font_17">
-            {{ __('translate.Good_Morning') }}, {{Auth::user()->username}}!
+            {{ __('translate.welcome') }}, {{Auth::user()->username}}!
             </p>
             <p class="p-0 m-0 text-gray-600 font_14">
               {{ __('translate.what_happening_with_your_store') }}
