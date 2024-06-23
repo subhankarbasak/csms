@@ -18,8 +18,8 @@ class CurrencySeeder extends Seeder
             'code' => 'INR',
             'name' => 'Indian Rupee',
             'symbol' => '₹',
-            'created_at' => null,
-            'updated_at' => null,
+            'created_at' => now(),
+            'updated_at' => now(),
             'deleted_at' => null,
         ]);
     }

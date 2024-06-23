@@ -35,6 +35,8 @@ class DatabaseSeeder extends Seeder
             ClientSeeder::class,
             UnitSeeder::class,
             WarehouseSeeder::class,
+            BrandSeeder::class,
+            CategorySeeder::class,
         ]);
     }
 }

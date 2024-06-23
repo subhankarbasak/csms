@@ -21,8 +21,8 @@ class UnitSeeder extends Seeder
                 'base_unit' => null,
                 'operator' => '*',
                 'operator_value' => 1,
-                'created_at' => null,
-                'updated_at' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
                 'deleted_at' => null,
             ],
             [
@@ -32,8 +32,8 @@ class UnitSeeder extends Seeder
                 'base_unit' => null,
                 'operator' => '/',
                 'operator_value' => 1000,
-                'created_at' => null,
-                'updated_at' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
                 'deleted_at' => null,
             ],
             [
@@ -43,8 +43,8 @@ class UnitSeeder extends Seeder
                 'base_unit' => null,
                 'operator' => '*',
                 'operator_value' => 1,
-                'created_at' => null,
-                'updated_at' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
                 'deleted_at' => null,
             ],
             [
@@ -54,8 +54,8 @@ class UnitSeeder extends Seeder
                 'base_unit' => null,
                 'operator' => '*',
                 'operator_value' => 1,
-                'created_at' => null,
-                'updated_at' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
                 'deleted_at' => null,
             ],
         ]);

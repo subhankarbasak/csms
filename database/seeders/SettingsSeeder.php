@@ -27,8 +27,8 @@ class SettingsSeeder extends Seeder
             'default_language' => 'en',
             'default_sms_gateway' => 'twilio',
             'symbol_placement' => 'before',
-            'created_at' => null,
-            'updated_at' => null,
+            'created_at' => now(),
+            'updated_at' => now(),
             'deleted_at' => null,
         ]);
     }

@@ -21,7 +21,7 @@ class UserSeeder extends Seeder
             [
                 'id' => 1,
                 'username' => 'Super Admin',
-                'email' => 'superadmin@admin.com',
+                'email' => 'superadmin@smartstock.in',
                 'email_verified_at' => null,
                 'avatar' => 'no_avatar.png',
                 'status' => 0,
@@ -32,7 +32,7 @@ class UserSeeder extends Seeder
             [
                 'id' => 2,
                 'username' => 'Admin',
-                'email' => 'admin@admin.com',
+                'email' => 'admin@smartstock.in',
                 'email_verified_at' => null,
                 'avatar' => 'no_avatar.png',
                 'status' => 1,
@@ -43,7 +43,7 @@ class UserSeeder extends Seeder
             [
                 'id' => 3,
                 'username' => 'Manager',
-                'email' => 'manager@admin.com',
+                'email' => 'manager@smartstock.in',
                 'email_verified_at' => null,
                 'avatar' => 'no_avatar.png',
                 'status' => 1,
@@ -54,7 +54,7 @@ class UserSeeder extends Seeder
             [
                 'id' => 4,
                 'username' => 'Salesman',
-                'email' => 'seller@admin.com',
+                'email' => 'seller@smartstock.in',
                 'email_verified_at' => null,
                 'avatar' => 'no_avatar.png',
                 'status' => 1,

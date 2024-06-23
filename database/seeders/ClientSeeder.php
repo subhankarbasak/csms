@@ -20,13 +20,13 @@ class ClientSeeder extends Seeder
             'code' => '1',
             'status' => 1,
             'photo' => 'no_avatar.png',
-            'email' => 'walk-in-customer@gmail.com',
+            'email' => 'walk-in-customer@smartstock.in',
             'country' => 'India',
             'city' => 'Kolkata',
             'phone' => '9876543210',
             'address' => 'address',
-            'created_at' => '2024-05-23 07:50:32',
-            'updated_at' => '2024-05-23 07:50:32',
+            'created_at' => now(),
+            'updated_at' => now(),
             'deleted_at' => null,
         ]);
     }

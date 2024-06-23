@@ -21,8 +21,8 @@ class WarehouseSeeder extends Seeder
             'zip' => '1000',
             'email' => 'shop1@gmail.com',
             'country' => 'India',
-            'created_at' => '2024-05-22 11:05:54',
-            'updated_at' => '2024-05-22 11:05:54',
+            'created_at' => now(),
+            'updated_at' => now(),
             'deleted_at' => null,
         ]);
     }
