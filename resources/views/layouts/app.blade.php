@@ -7,7 +7,10 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'CSMS') }}</title>    
+    <title>{{ config('app.name', 'CSMS') }} {{ __('- Lightangle Technologies') }}</title>
+    <meta name="Description" content="Lightangle Technologies - Customized Stock Management System">
+    <meta name="author" content="Lightangle Technologies">
+    <meta name="keywords" content="Lightangle Technologies - Customized Stock Management System">    
     <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,400i,600,700,800,900" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('assets/styles/css/themes/lite-purple.min.css') }}">
     <link rel="stylesheet" href="{{asset('assets/styles/vendor/login_page.css')}}">
