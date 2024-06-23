@@ -155,9 +155,9 @@ class ClientController extends Controller
                 //status
 
                 if($client->status == 1){
-                    $item['status'] = '<span class="badge badge-success">Client Actif</span>';
+                    $item['status'] = '<span class="badge badge-success">Active</span>';
                 }else{
-                    $item['status'] = '<span class="badge badge-warning">Client bloqué</span>';
+                    $item['status'] = '<span class="badge badge-warning">blocked</span>';
                 }
 
                 $item['action'] =  '<div class="dropdown">

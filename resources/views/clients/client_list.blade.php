@@ -37,7 +37,7 @@
                                 <th>{{ __('translate.FullName') }}</th>
                                 <th>{{ __('translate.Phone') }}</th>
                                 <th>{{ __('translate.Total_Sale_Due') }}</th>
-                                <th>{{ __('translate.Total_Sell_Return_Due') }}</th>
+                                <th class="d-none">{{ __('translate.Total_Sell_Return_Due') }}</th>
                                 <th>{{ __('translate.Status') }}</th>
                             </tr>
                         </thead>
@@ -93,7 +93,7 @@
                                             placeholder="{{ __('translate.Paying_Amount') }}" type="text"
                                             class="form-control">
                                         <div class="error">@{{ validationContext.errors[0] }}</div>
-                                        <span class="badge badge-danger">reste à payer : {{$currency ?? 'Rs.'}} @{{ sell_due }}</span>
+                                        <span class="badge badge-danger">left to pay : {{$currency ?? 'Rs.'}} @{{ sell_due }}</span>
                                     </validation-provider>
                                 </div>
     
@@ -197,7 +197,7 @@
                                             placeholder="{{ __('translate.Paying_Amount') }}" type="text"
                                             class="form-control">
                                         <div class="error">@{{ validationContext.errors[0] }}</div>
-                                        <span class="badge badge-danger">reste à payer : {{$currency ?? 'Rs.'}} @{{ return_due }}</span>
+                                        <span class="badge badge-danger">left to pay : {{$currency ?? 'Rs.'}} @{{ return_due }}</span>
                                     </validation-provider>
                                 </div>
 
@@ -319,7 +319,7 @@
                     {data: 'username'},
                     {data: 'phone'},
                     {data: 'sell_due'},
-                    {data: 'return_due'},
+                    {data: 'return_due' , className: "d-none"},
                     {data: 'status'},
                 
                 ],

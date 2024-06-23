@@ -34,12 +34,20 @@
                 {{ __('translate.Today_total_Purchases') }}
               </p>
             </div>
-            <div>
+            <div style="margin: 32px 0px 32px 0px">
               <h4 class="fw-semibold fs-4 mb-1">
                  {{$today_sales}}
               </h4>
               <p class="p-0 m-0 text-gray-600 font_14">
                 {{ __('translate.Today_total_Sales') }}
+              </p>
+            </div>
+            <div>
+              <h4 class="fw-semibold fs-4 mb-1">
+                 {{$today_dues}}
+              </h4>
+              <p class="p-0 m-0 text-gray-600 font_14">
+                {{ __('Today’s total Dues') }}
               </p>
             </div>
           </div>

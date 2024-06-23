@@ -68,8 +68,17 @@ class DashboardController extends Controller
         ->whereDate('date', '>=', $start_date)
         ->whereDate('date', '<=', $end_date)
         ->sum('GrandTotal');
+        
+        $today_paid_amount = Sale::where('deleted_at', '=', null)
+        ->whereDate('date', '>=', $start_date)
+        ->whereDate('date', '<=', $end_date)
+        ->sum('paid_amount');
+        
+        $today_dues = $today_sales - $today_paid_amount;
 
         $today_sales = $this->render_price_with_symbol_placement(number_format($today_sales, 2, '.', ','));
+
+        $today_dues = $this->render_price_with_symbol_placement(number_format($today_dues, 2, '.', ','));
 
 
         $return_sales = SaleReturn::where('deleted_at', '=', null)
@@ -202,6 +211,7 @@ class DashboardController extends Controller
 
         return view('dashboard.dashboard_admin', [
             'today_sales' => $today_sales,
+            'today_dues' => $today_dues,
             'return_sales' => $return_sales,
             'return_purchases' => $return_purchases,
             'today_purchases' => $today_purchases,
@@ -234,7 +244,16 @@ class DashboardController extends Controller
         ->whereDate('date', '<=', $end_date)
         ->sum('GrandTotal');
 
+        $today_paid_amount = Sale::where('deleted_at', '=', null)
+        ->whereDate('date', '>=', $start_date)
+        ->whereDate('date', '<=', $end_date)
+        ->sum('paid_amount');
+        
+        $today_dues = $today_sales - $today_paid_amount;
+
         $today_sales = $this->render_price_with_symbol_placement(number_format($today_sales, 2, '.', ','));
+
+        $today_dues = $this->render_price_with_symbol_placement(number_format($today_dues, 2, '.', ','));
 
 
         $return_sales = SaleReturn::where('deleted_at', '=', null)
@@ -261,6 +280,7 @@ class DashboardController extends Controller
 
         return response()->json([
             'today_sales' => $today_sales,
+            'today_dues' => $today_dues,
             'return_sales' => $return_sales,
             'return_purchases' => $return_purchases,
             'today_purchases' => $today_purchases,
