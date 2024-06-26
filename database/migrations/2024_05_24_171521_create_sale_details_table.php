@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('discount_method', 192)->default('1');
             $table->double('total');
             $table->double('quantity');
+            $table->string('optional_pname', 192)->nullable()->default(null);
             $table->timestamps();
         });
 

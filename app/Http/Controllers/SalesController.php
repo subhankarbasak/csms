@@ -329,7 +329,7 @@ class SalesController extends Controller
         $user_auth = auth()->user();
 		if ($user_auth->can('sales_add')){
 
-            \DB::transaction(function () use ($request) {
+            $item = \DB::transaction(function () use ($request) {
                 $order = new Sale;
 
                 $order->is_pos = 0;
@@ -370,7 +370,7 @@ class SalesController extends Controller
                         'product_variant_id' => $value['product_variant_id']?$value['product_variant_id']:NULL,
                         'total' => $value['subtotal'],
                         'imei_number' => $value['imei_number'],
-                        'optional_pname' => $value['optional_pname'],
+                        'optional_pname' => $value['optional_pname'] ?? null,
                     ];
 
 
@@ -451,10 +451,12 @@ class SalesController extends Controller
                     ]);
     
                 }
+           
+                return $order->id;
 
             }, 10);
 
-            return response()->json(['success' => true]);
+            return response()->json(['success' => true, 'id' => $item]);
 
         }
         return abort('403', __('You are not authorized'));
@@ -1000,7 +1002,7 @@ class SalesController extends Controller
                             $orderDetails['product_variant_id'] = $prod_detail['product_variant_id']?$prod_detail['product_variant_id']:NULL;
                             $orderDetails['total'] = $prod_detail['subtotal'];
                             $orderDetails['imei_number'] = $prod_detail['imei_number'];
-                            $orderDetails['optional_pname'] = $prod_detail['optional_pname'];
+                            $orderDetails['optional_pname'] = $prod_detail['optional_pname'] ?? null;
 
                             if (!in_array($prod_detail['id'], $old_products_id)) {
                                 $orderDetails['sale_unit_id'] = $unit_prod ? $unit_prod->id : Null;
@@ -1354,8 +1356,10 @@ class SalesController extends Controller
         // }
 
         $pdf = PDF::loadHTML($Html);
+        $pdf_name = $sale_data->Ref . '.pdf';
+        return $pdf->stream($pdf_name);
 
-        return $pdf->download('Sale.pdf');
+        // return $pdf->download('Sale.pdf');
         //----------
 
  

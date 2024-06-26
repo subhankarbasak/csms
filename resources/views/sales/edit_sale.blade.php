@@ -503,7 +503,6 @@
       this.detail.tax_percent = detail.tax_percent;
       this.detail.is_imei = detail.is_imei;
       this.detail.imei_number = detail.imei_number;
-      this.detail.optional_pname = detail.optional_pname;
       setTimeout(() => {
         NProgress.done();
         $('#form_Update_Detail').modal('show');
@@ -968,7 +967,6 @@
         this.product.qty_min = response.data.qty_min;
         this.product.is_imei = response.data.is_imei;
         this.product.imei_number = '';
-        this.product.optional_pname = '';
         this.add_product();
         this.Calcul_Total();
       });

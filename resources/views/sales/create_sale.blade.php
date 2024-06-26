@@ -681,8 +681,8 @@
             qty_min:"",
             is_imei: "",
             imei_number:"",
+            optional_pnames: "",
           },
-          optional_pnames: "",
         },
 
        
@@ -810,6 +810,7 @@
           this.details[i].discount = this.detail.discount;
           this.details[i].sale_unit_id = this.detail.sale_unit_id;
           this.details[i].imei_number = this.detail.imei_number;
+          this.details[i].optional_name = this.detail.optional_name;
           if (this.details[i].discount_Method == "2") {
             //Fixed
             this.details[i].DiscountNet = this.details[i].discount;
@@ -1301,13 +1302,15 @@
               account_id: this.payment.account_id,
               payment_notes: this.payment.notes,
               montant : parseFloat(this.payment.montant).toFixed(2),
-              optional_pnames: this.detail.optional_pnames,
             })
             .then(response => {
               NProgress.done();
               this.paymentProcessing = false;
               toastr.success('{{ __('translate.Created_in_successfully') }}');
-              window.location.href = '/sale/sales';
+              // window.location.href = '/sale/sales';
+              // console.log(response.data);
+              window.open("/Sale_PDF/" + response.data.id, "_blank");
+              window.location.reload();
             })
             .catch(error => {
               NProgress.done();

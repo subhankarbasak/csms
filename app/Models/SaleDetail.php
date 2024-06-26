@@ -9,7 +9,7 @@ class SaleDetail extends Model
 
     protected $fillable = [
         'id', 'date', 'sale_id','sale_unit_id', 'quantity', 'product_id', 'total', 'product_variant_id',
-        'price', 'TaxNet', 'discount', 'discount_method', 'tax_method', 'optional_pname',
+        'price', 'TaxNet', 'discount', 'discount_method', 'tax_method',
     ];
 
     protected $casts = [
