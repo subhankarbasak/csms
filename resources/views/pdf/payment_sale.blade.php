@@ -9,13 +9,13 @@ $image_path = '\images\\'.$setting['logo'];
 <head>
    <meta charset="utf-8">
    <title>{{$payment['Ref']}}</title>
-   <link rel="stylesheet" href="{{ public_path() . $css_path }}">
+   <link rel="stylesheet" href="{{asset('assets/styles/vendor/pdf_style.css')}}">
 </head>
 
 <body>
    <header class="clearfix">
       <div id="logo">
-         <img src="{{ public_path() . $image_path }}">
+         <img src="{{asset('/images/'.$setting['logo'])}}">
       </div>
       <div id="company">
          <div><strong> {{ __('translate.Date') }} </strong>{{$payment['date']}}</div>

@@ -68,7 +68,7 @@
 
                        
 
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-4 d-none">
                             <label for="stock_alert">{{ __('translate.Order_Tax') }} </label>
 
                             <div class="input-group mb-3">
@@ -78,7 +78,7 @@
 
                         </div>
 
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-4 d-none">
                             <label>{{ __('translate.Tax_Method') }} <span class="field_required">*</span></label>
                             <v-select placeholder="{{ __('translate.Choose_Method') }}" v-model="product.tax_method"
                                 :reduce="(option) => option.value" :options="
@@ -332,12 +332,12 @@
                   brand_id: "",
                   category_id: "",
                   TaxNet: "0",
-                  tax_method: "1",
+                  tax_method: "2",
                   unit_id: "",
                   unit_sale_id: "",
                   unit_purchase_id: "",
-                  stock_alert: "0",
-                  qty_min:0,
+                  stock_alert: "10",
+                  qty_min:1,
                   image: "",
                   note: "",
                   is_variant: false,

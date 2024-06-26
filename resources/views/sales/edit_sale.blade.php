@@ -114,6 +114,8 @@
                           <br>
                           <span class="badge badge-success">@{{detail.name}}</span>
                         </td>
+                        <td><input type="text" v-model="detail.optional_pname" class="form-control form-control-sm" name="optional_pname" id="optional_pname"
+                        placeholder="{{ __('Optional Name') }}"></td>
                         <td>{{$currency}} @{{formatNumber(detail.Net_price, 2)}}</td>
                         <td>
                           <span class="badge badge-warning" v-if="detail.product_type == 'is_service'">----</span>
@@ -436,6 +438,7 @@
             etat: "",
             is_imei: "",
             imei_number:"",
+            optional_pname:"",
           }
         },
 
@@ -500,6 +503,7 @@
       this.detail.tax_percent = detail.tax_percent;
       this.detail.is_imei = detail.is_imei;
       this.detail.imei_number = detail.imei_number;
+      this.detail.optional_pname = detail.optional_pname;
       setTimeout(() => {
         NProgress.done();
         $('#form_Update_Detail').modal('show');
@@ -525,6 +529,7 @@
           this.details[i].discount_Method = this.detail.discount_Method;
           this.details[i].discount = this.detail.discount;
           this.details[i].imei_number = this.detail.imei_number;
+          this.details[i].optional_pname = this.detail.optional_pname;
           if (this.details[i].discount_Method == "2") {
             //Fixed
             this.details[i].DiscountNet = this.detail.discount;
@@ -963,6 +968,7 @@
         this.product.qty_min = response.data.qty_min;
         this.product.is_imei = response.data.is_imei;
         this.product.imei_number = '';
+        this.product.optional_pname = '';
         this.add_product();
         this.Calcul_Total();
       });

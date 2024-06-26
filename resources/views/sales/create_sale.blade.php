@@ -99,12 +99,13 @@
                       <tr>
                         <th scope="col">#</th>
                         <th scope="col">{{ __('translate.Product_Name') }}</th>
-                        <th scope="col">{{ __('translate.Net_Unit_Price') }}</th>
-                        <th scope="col">{{ __('translate.Current_Stock') }}</th>
+                        <th scope="col">{{ __('translate.Optional_Name') }}</th>
+                        <th scope="col">{{ __('translate.Unit_Price') }}  {{ __('(Rs.)') }}</th>
+                        <th scope="col">{{ __('translate.Available') }}</th>
                         <th scope="col">{{ __('translate.Qty') }}</th>
                         <th scope="col">{{ __('translate.Discount') }}</th>
                         <th scope="col">{{ __('translate.Tax') }}</th>
-                        <th scope="col">{{ __('translate.SubTotal') }}</th>
+                        <th scope="col">{{ __('translate.SubTotal') }} {{ __('(Rs.)') }}</th>
                         <th scope="col">{{ __('translate.Action') }}</th>
                       </tr>
                     </thead>
@@ -119,13 +120,14 @@
                           <br>
                           <span class="badge badge-success">@{{ detail.name }}</span>
                         </td>
+                        <td><input type="text" v-model="detail.optional_pname" class="form-control form-control-sm" name="optional_pname" id="optional_pname"
+                        placeholder="{{ __('Optional Name') }}"></td>
                         <td>
-                          {{$currency}} 
-                          <input type="number" class="form-control" v-model.number="detail.Unit_price" @change="updateDetail(detail)">
+                          <input type="number" class="form-control form-control-sm" v-model.number="detail.Unit_price" @change="updateDetail(detail)">
                         </td>
                         <td>
                           <span class="badge badge-warning" v-if="detail.product_type == 'is_service'">----</span>
-                          <span class="badge badge-warning" v-else>@{{ detail.stock }} @{{ detail.unitSale }}</span>
+                          <h4 class="badge-warning" v-else>@{{ detail.stock }} @{{ detail.unitSale }}</h4>
                         </td>
                         <td>
                           <div class="d-flex align-items-center">
@@ -140,20 +142,20 @@
                           </div>
                         </td>
                         <td>
-                          <input type="number" class="form-control" v-model.number="detail.discount" @change="updateDetail(detail)">
-                          <select class="form-control mt-2" v-model="detail.discount_Method" @change="updateDetail(detail)">
+                          <input type="number" class="form-control form-control-sm" v-model.number="detail.discount" @change="updateDetail(detail)">
+                          <select class="form-control mt-2 form-control-sm" v-model="detail.discount_Method" @change="updateDetail(detail)">
                             <option value="1">Percentage</option>
                             <option value="2">Fixed</option>
                           </select>
                         </td>
                         <td>
-                          <input type="number" class="form-control" v-model.number="detail.tax_percent" @change="updateDetail(detail)">
-                          <select class="form-control mt-2" v-model="detail.tax_method" @change="updateDetail(detail)">
+                          <input type="number" class="form-control form-control-sm" v-model.number="detail.tax_percent" @change="updateDetail(detail)">
+                          <select class="form-control mt-2 form-control-sm" v-model="detail.tax_method" @change="updateDetail(detail)">
                             <option value="1">Exclusive</option>
                             <option value="2">Inclusive</option>
                           </select>
                         </td>
-                        <td>{{$currency}} @{{ formatNumber(detail.subtotal, 2) }}</td>
+                        <td> @{{ formatNumber(detail.subtotal, 2) }}</td>
                         <td>
                           <a @click="Modal_Updat_Detail(detail)" class="cursor-pointer ul-link-action text-success" title="Edit">
                             <i class="i-Edit"></i>
@@ -679,7 +681,8 @@
             qty_min:"",
             is_imei: "",
             imei_number:"",
-          }
+          },
+          optional_pnames: "",
         },
 
        
@@ -1298,6 +1301,7 @@
               account_id: this.payment.account_id,
               payment_notes: this.payment.notes,
               montant : parseFloat(this.payment.montant).toFixed(2),
+              optional_pnames: this.detail.optional_pnames,
             })
             .then(response => {
               NProgress.done();

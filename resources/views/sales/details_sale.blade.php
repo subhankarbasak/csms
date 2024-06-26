@@ -107,6 +107,8 @@
                     <td><span>@{{detail.code}} (@{{detail.name}})</span>
                       <p v-show="detail.is_imei && detail.imei_number !==null ">IMEI_SN : @{{detail.imei_number}}
                       </p>
+                      <p v-show="detail.optional_pname !==null ">Optional : @{{detail.optional_pname}}
+                      </p>
                     </td>
                     <td>@{{formatNumber(detail.Net_price,2)}}</td>
                     <td>@{{formatNumber(detail.quantity,2)}} @{{detail.unit_sale}}</td>

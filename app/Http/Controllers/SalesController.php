@@ -370,6 +370,7 @@ class SalesController extends Controller
                         'product_variant_id' => $value['product_variant_id']?$value['product_variant_id']:NULL,
                         'total' => $value['subtotal'],
                         'imei_number' => $value['imei_number'],
+                        'optional_pname' => $value['optional_pname'],
                     ];
 
 
@@ -579,6 +580,7 @@ class SalesController extends Controller
 
                 $data['is_imei'] = $detail['product']['is_imei'];
                 $data['imei_number'] = $detail->imei_number;
+                $data['optional_pname'] = $detail->optional_pname;
 
                 $details[] = $data;
             }
@@ -735,6 +737,7 @@ class SalesController extends Controller
                         $data['sale_unit_id'] = $unit?$unit->id:'';
                         $data['is_imei'] = $detail['product']['is_imei'];
                         $data['imei_number'] = $detail->imei_number;
+                        $data['optional_pname'] = $detail->optional_pname;
 
                         if ($detail->discount_method == '2') {
                             $data['DiscountNet'] = $detail->discount;
@@ -997,6 +1000,7 @@ class SalesController extends Controller
                             $orderDetails['product_variant_id'] = $prod_detail['product_variant_id']?$prod_detail['product_variant_id']:NULL;
                             $orderDetails['total'] = $prod_detail['subtotal'];
                             $orderDetails['imei_number'] = $prod_detail['imei_number'];
+                            $orderDetails['optional_pname'] = $prod_detail['optional_pname'];
 
                             if (!in_array($prod_detail['id'], $old_products_id)) {
                                 $orderDetails['sale_unit_id'] = $unit_prod ? $unit_prod->id : Null;
@@ -1187,6 +1191,7 @@ class SalesController extends Controller
  
              $data['is_imei'] = $detail['product']['is_imei'];
              $data['imei_number'] = $detail->imei_number;
+             $data['optional_pname'] = $detail->optional_pname;
  
              $details[] = $data;
          }
@@ -1328,6 +1333,7 @@ class SalesController extends Controller
  
              $data['is_imei'] = $detail['product']['is_imei'];
              $data['imei_number'] = $detail->imei_number;
+             $data['optional_pname'] = $detail->optional_pname;
  
              $details[] = $data;
          }
