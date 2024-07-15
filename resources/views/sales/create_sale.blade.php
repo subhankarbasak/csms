@@ -209,6 +209,24 @@
           <div class="card-body">
             <div class="row">
 
+            <!-- GST No. Added -->
+            <!-- GST Fields -->
+            <div class="form-group col-md-4">
+                <label for="is_gst">{{ __('Is GST Applicable?') }}</label>
+                <select class="form-select" v-model="sale.is_gst">
+                    <option value="0">{{ __('No') }}</option>
+                    <option value="1">{{ __('Yes') }}</option>
+                </select>
+            </div>
+
+            <div class="form-group col-md-4" v-if="sale.is_gst == 1">
+                <label for="gst_no">{{ __('GST Number') }}</label>
+                <input type="text" class="form-control" v-model="sale.gst_no">
+            </div>
+            <!-- ./ GST Fields -->
+
+            <!-- ./GST No. Added -->
+
               {{-- Order_Tax --}}
               <div class="form-group col-md-4">
                 <validation-provider name="Order Tax" :rules="{ regex: /^\d*\.?\d*$/}" v-slot="validationContext">
@@ -260,10 +278,11 @@
 
 
               <div class="col-lg-12 mt-5">
-                <button type="submit" class="btn btn-primary" :disabled="paymentProcessing">
+                <button type="submit" @click="submitPay" class="btn btn-primary" :disabled="paymentProcessing">
                   <span v-if="paymentProcessing" class="spinner-border spinner-border-sm" role="status"
-                    aria-hidden="true"></span> <i class="i-Yes me-2 font-weight-bold"></i> {{ __('translate.Submit') }}
+                    aria-hidden="true"></span> <i class="i-Save-Window me-2 font-weight-bold"></i> {{ __('Save & Pay') }}
                 </button>
+                <button type="submit" @click="submitWithoutPay" class="btn btn-success"> <i class="i-Yes me-2 font-weight-bold"></i> {{ __('Save without Pay') }}</button>
               </div>
             </div>
           </div>
@@ -640,6 +659,8 @@
             discount: 0,
             discount_type:"fixed",
             discount_percent_total: 0,
+            is_gst: 0,
+            gst_no: "",
           },
           payment: {
               date:moment().format('YYYY-MM-DD HH:mm'),
@@ -685,6 +706,35 @@
           },
         },
 
+// Added for fetching GST no from clients table based on is_gst selection
+watch: {
+    'sale.client_id': function(newVal, oldVal) {
+        if (newVal) {
+            // Find the selected client by client_id
+            let selectedClient = this.clients.find(client => client.id === newVal);
+            if (selectedClient) {
+                // Update gst_no if is_gst is 1 (Yes)
+                if (this.sale.is_gst == 1) {
+                    this.sale.gst_no = selectedClient.gst_no;
+                }
+            }
+        }
+    },
+    'sale.is_gst': function(newVal, oldVal) {
+        // Clear gst_no if is_gst changes to 0 (No)
+        if (newVal == 0) {
+            this.sale.gst_no = '';
+        } else {
+            // Update gst_no based on selected client when is_gst is 1 (Yes)
+            let selectedClient = this.clients.find(client => client.id === this.sale.client_id);
+            if (selectedClient) {
+                this.sale.gst_no = selectedClient.gst_no;
+            }
+        }
+    }
+},
+// ./ upto here
+
        
        
     methods: {
@@ -724,11 +774,36 @@
       this.$refs.create_sale.validate().then(success => {
         if (!success) {
           toastr.error('{{ __('translate.Please_fill_the_form_correctly') }}');
+        }
+        // commented code as two buttons added on 15.07.2024
+        // else{
+        //   this.Submit_Pos();
+        // }
+      });
+    },
+
+    // Subhankar Added for two button on 15.07.2024
+    submitPay() {
+      this.$refs.create_sale.validate().then(success => {
+        if (!success) {
+          toastr.error('{{ __('translate.Please_fill_the_form_correctly') }}');
         }else{
-          this.Submit_Pos();
+          this.Submit_Pos(); //or this.Create_Sale();
         }
       });
     },
+    submitWithoutPay() {
+      this.$refs.create_sale.validate().then(success => {
+            if (!success) {
+              toastr.error('{{ __('translate.Please_fill_the_form_correctly') }}');
+            }
+            this.payment.montant = 0;
+            this.Create_Sale();
+            
+        });
+    },
+
+    // ./upto here
   
     //---------------------- Get_sales_units ------------------------------\\
     Get_sales_units(value) {
@@ -1302,6 +1377,8 @@
               account_id: this.payment.account_id,
               payment_notes: this.payment.notes,
               montant : parseFloat(this.payment.montant).toFixed(2),
+              is_gst: this.sale.is_gst,
+              gst_no: this.sale.gst_no,
             })
             .then(response => {
               NProgress.done();

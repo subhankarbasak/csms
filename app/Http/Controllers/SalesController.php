@@ -301,7 +301,7 @@ class SalesController extends Controller
             }
 
             $clients = client::where('deleted_at', '=', null)
-            ->get(['id', 'username', 'phone']);
+            ->get(['id', 'username', 'phone', 'gst_no']);
             $payment_methods = PaymentMethod::where('deleted_at', '=', null)->orderBy('id', 'desc')->get(['id','title']);
             $accounts = Account::where('deleted_at', '=', null)->orderBy('id', 'desc')->get(['id','account_name']);
 
@@ -349,6 +349,9 @@ class SalesController extends Controller
                 $order->statut = 'completed';
                 $order->payment_statut = 'unpaid';
                 $order->notes = $request->notes;
+                // GST no. added on 15.07.2024
+                $order->is_gst = $request->is_gst;
+                $order->gst_no = $request->gst_no;
                 $order->user_id = Auth::user()->id;
                 $order->save();
 
