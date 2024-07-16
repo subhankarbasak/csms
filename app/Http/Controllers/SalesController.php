@@ -678,6 +678,8 @@ class SalesController extends Controller
                 $sale['statut'] = $Sale_data->statut;
                 $sale['notes'] = $Sale_data->notes;
                 $sale['GrandTotal'] = $Sale_data->GrandTotal;
+                $sale['is_gst'] = $Sale_data->is_gst;
+                $sale['gst_no'] = $Sale_data->gst_no;
 
                 $detail_id = 0;
                 foreach ($Sale_data['details'] as $detail) {
@@ -1030,7 +1032,7 @@ class SalesController extends Controller
                         'client_id' => $request['client_id'],
                         'warehouse_id' => $request['warehouse_id'],
                         'notes' => $request['notes'],
-                        'statut' => $request['statut'],
+                        'statut' => $request['statut'] ?? 'completed',
                         'tax_rate' => $request['tax_rate'],
                         'TaxNet' => $request['TaxNet'],
                         'discount' => $request['discount'],
@@ -1039,6 +1041,8 @@ class SalesController extends Controller
                         'shipping' => $request['shipping'],
                         'GrandTotal' => $request['GrandTotal'],
                         'payment_statut' => $payment_statut,
+                        'is_gst' => $request['is_gst'],
+                        'gst_no' => $request['gst_no'],
                     ]);
 
                 }, 10);

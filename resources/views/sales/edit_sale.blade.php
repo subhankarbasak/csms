@@ -193,6 +193,24 @@
           <div class="card-body">
             <div class="row">
 
+            <!-- GST No. Added -->
+            <!-- GST Fields -->
+            <div class="form-group col-md-4">
+                <label for="is_gst">{{ __('Is GST Applicable?') }}</label>
+                <select class="form-select" v-model="sale.is_gst">
+                    <option value="0">{{ __('No') }}</option>
+                    <option value="1">{{ __('Yes') }}</option>
+                </select>
+            </div>
+
+            <div class="form-group col-md-4" v-if="sale.is_gst == 1">
+                <label for="gst_no">{{ __('GST Number') }}</label>
+                <input type="text" class="form-control" v-model="sale.gst_no">
+            </div>
+            <!-- ./ GST Fields -->
+
+            <!-- ./GST No. Added -->
+
               <div class="form-group col-md-4">
                 <validation-provider name="Order Tax" :rules="{ regex: /^\d*\.?\d*$/}" v-slot="validationContext">
                   <label for="ordertax">{{ __('translate.Order_Tax') }} </label>
@@ -920,7 +938,9 @@
             discount_type: this.sale.discount_type,
             discount_percent_total: this.sale.discount_percent_total?this.sale.discount_percent_total:0,
             shipping: this.sale.shipping?this.sale.shipping:0,
-            details: this.details
+            details: this.details,
+            is_gst: this.sale.is_gst,
+            gst_no: this.sale.gst_no
           })
           .then(response => {
              // Complete the animation of theprogress bar.
