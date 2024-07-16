@@ -117,6 +117,7 @@ class ClientController extends Controller
                 $item['username'] = $client->username;
                 $item['phone'] = $client->phone;
                 $item['city'] = $client->city;
+                $item['gst_no'] = $client->gst_no ?? '';
 
                 //sell_due
                 $sell_due = 0;
@@ -258,6 +259,7 @@ class ClientController extends Controller
                 'city'           => $request['city'],
                 'phone'          => $request['phone'],
                 'address'        => $request['address'],
+                'gst_no'        => $request['gst_no'],
                 'status'         => 1,
                 'photo'          => $filename,
             ]);
@@ -294,6 +296,7 @@ class ClientController extends Controller
             $item['code'] = $client->code;
             $item['phone'] = $client->phone;
             $item['address'] = $client->address;
+            $item['gst_no'] = $client->gst_no ?? '';
 
 
             if($client->status == 1){
@@ -404,6 +407,7 @@ class ClientController extends Controller
                 'city'           => $request['city'],
                 'phone'          => $request['phone'],
                 'address'        => $request['address'],
+                'gst_no'        => $request['gst_no'],
                 'status'         => 1,
                 'photo'          => $filename,
             ]);
@@ -757,6 +761,13 @@ class ClientController extends Controller
                     $row['phone'] = NULL;
                 }
 
+                //--client gst_no
+                if ($value['gst_no'] != '') {
+                    $row['gst_no'] = $value['gst_no'];
+                } else {
+                    $row['gst_no'] = NULL;
+                }
+
                 $clients[]= $row;
             }
 
@@ -771,6 +782,7 @@ class ClientController extends Controller
                 $client->city = $client_value['city'];
                 $client->address = $client_value['address'];
                 $client->phone = $client_value['phone'];
+                $client->gst_no = $client_value['gst_no'];
 
                 //default value
                 $client->status = 1;

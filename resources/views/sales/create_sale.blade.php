@@ -568,6 +568,13 @@
                   </span>
                 </div>
                 <div class="form-group col-md-4">
+                  <label for="gst_no">{{ __('translate.gst_no') }}</label>
+                  <input type="text" v-model="client.gst_no" class="form-control" id="gst_no" placeholder="{{ __('translate.Enter_gst_no') }}">
+                  <span class="error" v-if="errors && errors.gst_no">
+                    @{{ errors.gst_no[0] }}
+                  </span>
+                </div>
+                <div class="form-group col-md-4">
                   <label for="photo">{{ __('translate.Image') }}</label>
                   <input name="photo" @change="changePhoto" type="file" class="form-control" id="photo">
                   <span class="error" v-if="errors && errors.photo">
@@ -1460,6 +1467,7 @@ watch: {
         city: "",
         phone: "",
         address: "",
+        gst_no: "",
       },
     },
     methods: {
@@ -1477,6 +1485,7 @@ watch: {
         self.data.append("phone", self.client.phone);
         self.data.append("address", self.client.address);
         self.data.append("photo", self.client.photo);
+        self.data.append("gst_no", self.client.gst_no);
         axios.post("/people/clients", self.data)
           .then(response => {
             self.SubmitProcessing = false;

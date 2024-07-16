@@ -64,6 +64,15 @@
                             </span>
                         </div>
 
+                        <div class="form-group col-md-4">
+                            <label for="gst_no">{{ __('translate.gst_no') }}</label>
+                            <input type="text" v-model="client.gst_no" class="form-control" id="gst_no"
+                                placeholder="{{ __('translate.Enter_gst_no') }}">
+                            <span class="error" v-if="errors && errors.gst_no">
+                                @{{ errors.gst_no[0] }}
+                            </span>
+                        </div>
+
                         <div class="form-group col-md-8">
                             <label for="address">{{ __('translate.Address') }}</label>
                             <textarea v-model="client.address" class="form-control" name="address"
@@ -132,6 +141,7 @@
                 self.data.append("city", self.client.city);
                 self.data.append("phone", self.client.phone);
                 self.data.append("address", self.client.address);
+                self.data.append("gst_no", self.client.gst_no);
                 if(self.old_photo != self.client.photo){
                  self.data.append("photo", self.client.photo);
                 }
