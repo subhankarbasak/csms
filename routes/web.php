@@ -262,6 +262,8 @@ Route::middleware([XSS::class])->group(function () {
 
              Route::get('import_clients', [ClientController::class, 'import_clients_page'])->name('import_clients');
              Route::post('import_clients', [ClientController::class, 'import_clients']);
+            // Subhankar Added on 16.07.2024 Customer profile sales report view
+             Route::post('get_customer_report_sales_datatable', [ClientController::class, 'get_customer_report_sales_datatable'])->name('get_customer_report_sales_datatable');
 
              //------------------------------- users & permissions --------------------------\\
             Route::prefix('user-management')->group(function() {

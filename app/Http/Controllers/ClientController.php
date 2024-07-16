@@ -22,6 +22,8 @@ use DataTables;
 use App\Helpers\helpers;
 use DB;
 use Auth;
+use App\Models\Warehouse;
+use App\Models\UserWarehouse;
 
 class ClientController extends Controller
 {
@@ -282,6 +284,14 @@ class ClientController extends Controller
             
             $helpers = new helpers();
             $currency = $helpers->Get_Currency();
+
+            //get warehouses 
+            if($user_auth->is_all_warehouses){
+                $warehouses = Warehouse::where('deleted_at', '=', null)->get(['id', 'name']);
+            }else{
+                $warehouses_id = UserWarehouse::where('user_id', $user_auth->id)->pluck('warehouse_id')->toArray();
+                $warehouses = Warehouse::where('deleted_at', '=', null)->whereIn('id', $warehouses_id)->get(['id', 'name']);
+            }
           
             $client = Client::where('deleted_at', '=', null)
             ->where(function ($query) use ($user_auth) {
@@ -292,6 +302,7 @@ class ClientController extends Controller
 
             $client_data = [];
         
+            $item['id'] = $client->id;
             $item['full_name'] = $client->username;
             $item['code'] = $client->code;
             $item['phone'] = $client->phone;
@@ -333,6 +344,7 @@ class ClientController extends Controller
             return view('clients.details_client', [
                 'client_id' => $id,
                 'client_data' => $client_data[0],
+                'warehouses' => $warehouses,
             ]);
         }
         return abort('403', __('You are not authorized'));
@@ -808,6 +820,153 @@ class ClientController extends Controller
             return $this->currency . ' ' . $amount;
         } else {
             return $amount . ' ' . $this->currency;
+        }
+    }
+
+
+    // Subhankar Added on 16.07.2024 : Customer Sales Report
+     //----- get_customer_report_sales_datatable -------\\
+     public function get_customer_report_sales_datatable(Request $request)
+     {
+        $user_auth = auth()->user();
+        if (!$user_auth->can('sale_reports')){
+            return abort('403', __('You are not authorized'));
+        }else{
+ 
+            if($user_auth->is_all_warehouses){
+                $array_warehouses_id = Warehouse::where('deleted_at', '=', null)->pluck('id')->toArray();
+            }else{
+                $array_warehouses_id = UserWarehouse::where('user_id', $user_auth->id)->pluck('warehouse_id')->toArray();
+            }
+                        
+            if(empty($request->warehouse_id)){
+                $warehouse_id = 0;
+            }else{
+                $warehouse_id = $request->warehouse_id;
+            }
+
+            $helpers = new helpers();
+            $param = array(
+                0 => 'like',
+                1 => '=',
+                2 => 'like',
+                3 => '=',
+            );
+            $columns = array(
+                0 => 'Ref',
+                1 => 'client_id',
+                2 => 'payment_statut',
+                3 => 'warehouse_id',
+            );
+
+            $columns_order = array( 
+                0 => 'id', 
+                1 => 'date', 
+                2 => 'Ref', 
+            );
+
+            $start = $request->input('start');
+            $order = 'sales.'.$columns_order[$request->input('order.0.column')];
+            $dir = $request->input('order.0.dir');
+ 
+            $end_date_default = Carbon::now()->addYear(10)->format('Y-m-d');
+            $start_date_default = Carbon::now()->subYear(10)->format('Y-m-d');
+            
+            $start_date = empty($request->start_date)?$start_date_default:$request->start_date;
+            $end_date = empty($request->end_date)?$end_date_default:$request->end_date;
+
+            $sales_data = Sale::where('deleted_at', '=', null)
+            // ->with('client')
+            ->whereDate('date', '>=', $start_date)
+            ->whereDate('date', '<=', $end_date)
+            
+            ->where(function ($query) use ($request, $warehouse_id, $array_warehouses_id) {
+                if ($warehouse_id !== 0) {
+                    return $query->where('warehouse_id', $warehouse_id);
+                }else{
+                    return $query->whereIn('warehouse_id', $array_warehouses_id);
+                }
+            })
+            
+            ->where(function ($query) use ($user_auth) {
+                if (!$user_auth->can('sales_view_all')) {
+                    return $query->where('user_id', '=', $user_auth->id);
+                }
+            });
+
+            //Multiple Filter
+            $sales_Filtred = $helpers->filter($sales_data, $columns, $param, $request)
+
+             // Search With Multiple Param
+             ->where(function ($query) use ($request) {
+                return $query->when($request->filled('search'), function ($query) use ($request) {
+                    return $query->where('Ref', 'LIKE', "%{$request->input('search.value')}%")
+                        ->orWhere('payment_statut', 'like', "%{$request->input('search.value')}%")
+                        ->orWhere(function ($query) use ($request) {
+                            return $query->whereHas('client', function ($q) use ($request) {
+                                $q->where('username', 'LIKE', "%{$request->input('search.value')}%");
+                            });
+                        })
+                        ->orWhere(function ($query) use ($request) {
+                            return $query->whereHas('warehouse', function ($q) use ($request) {
+                                $q->where('name', 'LIKE', "%{$request->input('search.value')}%");
+                            });
+                        });
+                });
+            });
+
+            $totalRows = $sales_Filtred->count();
+            $totalFiltered = $totalRows;
+
+            if($request->input('length') != -1)
+            $limit = $request->input('length');
+            else
+            $limit = $totalRows;
+
+            $sales = $sales_Filtred
+            ->with('warehouse','user','client')
+            ->offset($start)
+            ->limit($limit)
+            ->orderBy($order, $dir)
+            ->get();
+
+            $data = array();
+
+            foreach ($sales as $sale) {
+
+                $item['id']             = $sale->id;
+                $item['date']           = Carbon::parse($sale->date)->format('d-m-Y H:i');
+                $item['Ref']            = '<a href="/sale/sales/'.$sale->id.'" target="_blank">'.$sale->Ref.'</a>'; //$sale->Ref;
+                $item['created_by']     = $sale->user->username;
+                $item['warehouse_name'] = $sale->warehouse->name;
+                $item['client_name']    = $sale->client->username;
+                $item['GrandTotal']     = number_format($sale->GrandTotal, 2, '.', ',');
+                $item['paid_amount']    = number_format($sale->paid_amount, 2, '.', ',');
+                $item['due']            = number_format($sale->GrandTotal - $sale->paid_amount, 2, '.', ',');
+              
+
+                //payment_status
+                if($sale->payment_statut == 'paid'){
+                    $item['payment_status'] = '<span class="badge badge-outline-success">'.trans('translate.Paid').'</span>';
+                }else if($sale->payment_statut == 'partial'){
+                    $item['payment_status'] = '<span class="badge badge-outline-info">'.trans('translate.Partial').'</span>';
+                }else{
+                    $item['payment_status'] = '<span class="badge badge-outline-warning">'.trans('translate.Unpaid').'</span>';
+                }
+
+                $data[] = $item;
+
+            }
+
+
+            $json_data = array(
+                "draw"            => intval($request->input('draw')),  
+                "recordsTotal"    => intval($totalRows),  
+                "recordsFiltered" => intval($totalFiltered), 
+                "data"            => $data   
+            );
+                
+            echo json_encode($json_data);
         }
     }
 
