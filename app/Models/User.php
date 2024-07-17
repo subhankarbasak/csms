@@ -60,4 +60,10 @@ class User extends Authenticatable
     {
         return $this->belongsToMany('App\Models\Warehouse');
     }
+
+    public static function getUserNameById($id)
+    {
+        $user = self::find($id);
+        return $user ? $user->username : 'User not found';
+    }
 }

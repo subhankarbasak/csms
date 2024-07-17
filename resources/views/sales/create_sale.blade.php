@@ -1393,7 +1393,7 @@ watch: {
               toastr.success('{{ __('translate.Created_in_successfully') }}');
               // window.location.href = '/sale/sales';
               // console.log(response.data);
-              window.open("/Sale_PDF/" + response.data.id, "_blank");
+              window.open("/api/v1/pdf/" + response.data.id, "_blank");
               window.location.reload();
             })
             .catch(error => {

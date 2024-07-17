@@ -43,4 +43,9 @@ class PaymentSale extends Model
         return $this->belongsTo('App\Models\Sale');
     }
 
+    public function paymentMethod()
+    {
+        return $this->belongsTo(PaymentMethod::class);
+    }
+
 }

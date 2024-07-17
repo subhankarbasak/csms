@@ -1607,6 +1607,7 @@ class SalesController extends Controller
          $sale['client_phone']           = $sale_data['client']->phone;
          $sale['client_adr']             = $sale_data['client']->address;
          $sale['client_email']           = $sale_data['client']->email;
+         $sale['client_gst_no']           = $sale_data['client']->gst_no;
          $sale['tax_rate']               = number_format($sale_data->tax_rate, 2, '.', ' ');
          $sale['TaxNet']                 = $this->render_price_with_symbol_placement(number_format($sale_data->TaxNet, 2, '.', ','));
 
@@ -1624,6 +1625,8 @@ class SalesController extends Controller
          $sale['paid_amount']            = $this->render_price_with_symbol_placement(number_format($sale_data->paid_amount, 2, '.', ','));
          $sale['due']                    = $this->render_price_with_symbol_placement(number_format($sale_data->GrandTotal - $sale_data->paid_amount, 2, '.', ','));
          $sale['payment_status']         = $sale_data->payment_statut;
+         $sale['sold_by']                    = $sale_data->user_id;
+         $sale['notes']                    = $sale_data->notes;
 
          $detail_id = 0;
          foreach ($sale_data['details'] as $detail) {
@@ -1642,7 +1645,7 @@ class SalesController extends Controller
              }
  
                  $data['detail_id'] = $detail_id += 1;
-                 $data['quantity'] = number_format($detail->quantity, 2, '.', '');
+                 $data['quantity'] = number_format($detail->quantity, 0, '.', '');
                  $data['total'] = number_format($detail->total, 2, '.', ' ');
                  $data['unitSale'] = $unit?$unit->ShortName:'';
                  $data['price'] = number_format($detail->price, 2, '.', ' ');
@@ -1673,13 +1676,26 @@ class SalesController extends Controller
          }
          $settings = Setting::where('deleted_at', '=', null)->first();
 
+         $paymentSale = PaymentSale::where('sale_id', $id)->first();
+        // We can also fetch all related payment sales as there can be multiple
+        // $paymentSales = PaymentSale::where('sale_id', $sale_id)->get();
+        // and view code will be:
+            // @if ($paymentSales->isEmpty())
+            //     {{__('-') }}
+            // @else
+            //     @foreach ($paymentSales as $paymentSale)
+            //     <p>{{ $paymentSale->paymentMethod->title }}  :  {{ $paymentSale->montant }}</p>
+            //     @endforeach
+            // @endif
+
         $pdfData = [
             'setting' => $settings,
             'sale' => $sale,
             'details' => $details,
+            'paymentSales' =>  $paymentSale,
         ];
 
-        $html = view('pdf.api_sale_pdf', $pdfData);
+        $html = view('pdf.api_sales_pdf', $pdfData);
 
         $pdf = app('dompdf.wrapper');
         $pdf->loadHTML($html);

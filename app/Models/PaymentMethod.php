@@ -18,4 +18,11 @@ class PaymentMethod extends Model
     protected $casts = [
         'is_default' => 'integer',
     ];
+
+
+
+    public function paymentSales()
+    {
+        return $this->hasMany(PaymentSale::class);
+    }
 }
