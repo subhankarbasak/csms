@@ -1589,4 +1589,101 @@ class SalesController extends Controller
         }
     }
 
+// Impliment a simple api for print sales pdf on 17.07.2024
+ 
+     //------------- SALE Details PDF -----------\\
+ 
+     public function pdf(Request $request, $id)
+     {
+ 
+         $details = array();
+         $user_auth = auth()->user();
+
+         $sale_data = Sale::with('details.product.unitSale')
+             ->where('deleted_at', '=', null)
+             ->findOrFail($id);
+ 
+         $sale['client_name']            = $sale_data['client']->username;
+         $sale['client_phone']           = $sale_data['client']->phone;
+         $sale['client_adr']             = $sale_data['client']->address;
+         $sale['client_email']           = $sale_data['client']->email;
+         $sale['tax_rate']               = number_format($sale_data->tax_rate, 2, '.', ' ');
+         $sale['TaxNet']                 = $this->render_price_with_symbol_placement(number_format($sale_data->TaxNet, 2, '.', ','));
+
+        if($sale_data->discount_type == 'fixed'){
+            $sale['discount']           = $this->render_price_with_symbol_placement(number_format($sale_data->discount, 2, '.', ','));
+        }else{
+            $sale['discount']           = $this->render_price_with_symbol_placement(number_format($sale_data->discount_percent_total, 2, '.', ',')) .' '.'('.$sale_data->discount .' '.'%)';
+        }
+
+         $sale['shipping']               = $this->render_price_with_symbol_placement(number_format($sale_data->shipping, 2, '.', ','));
+         $sale['statut']                 = $sale_data->statut;
+         $sale['Ref']                    = $sale_data->Ref;
+         $sale['date']                   = Carbon::parse($sale_data->date)->format('d-m-Y H:i');
+         $sale['GrandTotal']             = $this->render_price_with_symbol_placement(number_format($sale_data->GrandTotal, 2, '.', ','));
+         $sale['paid_amount']            = $this->render_price_with_symbol_placement(number_format($sale_data->paid_amount, 2, '.', ','));
+         $sale['due']                    = $this->render_price_with_symbol_placement(number_format($sale_data->GrandTotal - $sale_data->paid_amount, 2, '.', ','));
+         $sale['payment_status']         = $sale_data->payment_statut;
+
+         $detail_id = 0;
+         foreach ($sale_data['details'] as $detail) {
+ 
+            $unit = Unit::where('id', $detail->sale_unit_id)->first();
+             if ($detail->product_variant_id) {
+ 
+                 $productsVariants = ProductVariant::where('product_id', $detail->product_id)
+                     ->where('id', $detail->product_variant_id)->first();
+ 
+                $data['code'] = $productsVariants->code;
+                $data['name'] = '['.$productsVariants->name . '] ' . $detail['product']['name'];
+             } else {
+                 $data['code'] = $detail['product']['code'];
+                 $data['name'] = $detail['product']['name'];
+             }
+ 
+                 $data['detail_id'] = $detail_id += 1;
+                 $data['quantity'] = number_format($detail->quantity, 2, '.', '');
+                 $data['total'] = number_format($detail->total, 2, '.', ' ');
+                 $data['unitSale'] = $unit?$unit->ShortName:'';
+                 $data['price'] = number_format($detail->price, 2, '.', ' ');
+ 
+             if ($detail->discount_method == '2') {
+                 $data['DiscountNet'] = number_format($detail->discount, 2, '.', '');
+             } else {
+                 $data['DiscountNet'] = number_format($detail->price * $detail->discount / 100, 2, '.', '');
+             }
+ 
+             $tax_price = $detail->TaxNet * (($detail->price - $data['DiscountNet']) / 100);
+             $data['Unit_price'] = number_format($detail->price, 2, '.', '');
+             $data['discount'] = number_format($detail->discount, 2, '.', '');
+ 
+             if ($detail->tax_method == '1') {
+                 $data['Net_price'] = $detail->price - $data['DiscountNet'];
+                 $data['taxe'] = number_format($tax_price, 2, '.', '');
+             } else {
+                 $data['Net_price'] = ($detail->price - $data['DiscountNet']) / (($detail->TaxNet / 100) + 1);
+                 $data['taxe'] = number_format($detail->price - $data['Net_price'] - $data['DiscountNet'], 2, '.', '');
+             }
+ 
+             $data['is_imei'] = $detail['product']['is_imei'];
+             $data['imei_number'] = $detail->imei_number;
+             $data['optional_pname'] = $detail->optional_pname;
+ 
+             $details[] = $data;
+         }
+         $settings = Setting::where('deleted_at', '=', null)->first();
+
+        $pdfData = [
+            'setting' => $settings,
+            'sale' => $sale,
+            'details' => $details,
+        ];
+
+        $html = view('pdf.api_sale_pdf', $pdfData);
+
+        $pdf = app('dompdf.wrapper');
+        $pdf->loadHTML($html);
+        return $pdf->download($sale_data->Ref . '.pdf');
+     }
+
 }

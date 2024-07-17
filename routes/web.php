@@ -290,6 +290,8 @@ Route::middleware([XSS::class])->group(function () {
             Route::get('return_purchase_pdf/{id}', [PurchasesReturnController::class, 'Return_pdf']);
             Route::get('payment_return_sale_pdf/{id}', [PaymentSaleReturnsController::class, 'payment_return']);
             Route::get('payment_return_purchase_pdf/{id}', [PaymentPurchaseReturnsController::class, 'payment_return']);
+            // Sale details pages pdf download and print
+            Route::get('api/v1/pdf/{id}', [SalesController::class, 'pdf']);
 
             //------------------------------- SEND SMS --------------------------\\
             Route::post('sales_send_sms', [SalesController::class, 'Send_SMS']);

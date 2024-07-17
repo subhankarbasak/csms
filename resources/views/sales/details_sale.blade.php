@@ -28,13 +28,14 @@
         <i class="i-Envelope-2"></i>
         {{ __('translate.Send_sms') }}
       </a>
-
-    <a @click="Sale_PDF(sale.id)" class="btn-sm btn btn-secondary ripple btn-icon m-1">
-      <i class="i-File-TXT"></i> {{ __('translate.Download_PDF') }}
-    </a>
-    <a onclick="printDiv()" class="btn-sm btn btn-warning ripple btn-icon m-1">
+      
+    <a @click="API_Print_Sale_PDF(sale.id)" class="btn-sm btn btn-primary ripple btn-icon m-1">
       <i class="i-Billing"></i>
-      {{ __('translate.Print_Sale') }}
+      {{ __('Print Now') }}
+    </a>
+    <a @click="API_Download_Sale_PDF(sale.id)" class="btn-sm btn btn-secondary ripple btn-icon m-1">
+      <i class="i-File-TXT"></i>
+      {{ __('translate.Download_PDF') }}
     </a>
     @can('sales_delete')
     <a v-if="sale.sale_has_return == 'no'" @click="Delete_Sale(sale.id)" class="btn btn-danger btn-icon icon-left btn-sm m-1">
@@ -255,6 +256,115 @@
                 // Complete the animation of the  progress bar.
                 setTimeout(() => NProgress.done(), 500);
               });
+          },
+
+          API_Open_Sale_PDF(id) {
+              // Start the progress bar.
+              NProgress.start();
+              NProgress.set(0.1);
+
+              axios
+                  .get('/api/v1/pdf/'+ id, {
+                      responseType: "blob", // important
+                      headers: {
+                          "Content-Type": "application/json"
+                      }
+                  })
+                  .then(response => {
+                      const blob = new Blob([response.data], { type: 'application/pdf' });
+                      const url = URL.createObjectURL(blob);
+                      
+                      // Open the PDF in a new tab for printing
+                      window.open(url, '_blank');
+
+                      // Complete the animation of the progress bar.
+                      setTimeout(() => NProgress.done(), 500);
+                  })
+                  .catch(() => {
+                      // Complete the animation of the progress bar.
+                      setTimeout(() => NProgress.done(), 500);
+                  });
+          },
+
+          API_Download_Sale_PDF(id) {
+              // Start the progress bar.
+              NProgress.start();
+              NProgress.set(0.1);
+
+              axios
+                  .get('/api/v1/pdf/'+ id, {
+                      responseType: "blob", // important
+                      headers: {
+                          "Content-Type": "application/json"
+                      }
+                  })
+                  .then(response => {
+                      const blob = new Blob([response.data], { type: 'application/pdf' });
+                      const url = URL.createObjectURL(blob);
+
+                      // Create a link element
+                      const link = document.createElement('a');
+                      link.href = url;
+                      link.setAttribute('download', `Sale_${id}.pdf`); // Set the download attribute
+                      link.style.display = 'none'; // Hide the link
+                      document.body.appendChild(link);
+
+                      // Simulate click on the link to trigger download
+                      link.click();
+
+                      // Clean up
+                      document.body.removeChild(link);
+                      URL.revokeObjectURL(url);
+
+                      // Complete the animation of the progress bar.
+                      setTimeout(() => NProgress.done(), 500);
+                  })
+                  .catch(() => {
+                      // Complete the animation of the progress bar on error.
+                      setTimeout(() => NProgress.done(), 500);
+                  });
+          },
+
+          API_Print_Sale_PDF(id) {
+              // Start the progress bar.
+              NProgress.start();
+              NProgress.set(0.1);
+
+              axios
+                  .get('/api/v1/pdf/'+ id, {
+                      responseType: "blob", // important
+                      headers: {
+                          "Content-Type": "application/json"
+                      }
+                  })
+                  .then(response => {
+                      const blob = new Blob([response.data], { type: 'application/pdf' });
+                      const url = URL.createObjectURL(blob);
+
+                      // Create an iframe element
+                      const iframe = document.createElement('iframe');
+                      iframe.style.display = 'none'; // Hide the iframe
+                      iframe.src = url;
+
+                      // Append the iframe to the body
+                      document.body.appendChild(iframe);
+
+                      // Wait for the iframe to load
+                      iframe.onload = function() {
+                          // Print the iframe content
+                          iframe.contentWindow.print();
+
+                          // Complete the animation of the progress bar.
+                          setTimeout(() => {
+                              // document.body.removeChild(iframe); // Remove the iframe
+                              NProgress.done();
+                          }, 1000); // Adjust timing as necessary
+                      };
+                  })
+                  .catch(() => {
+                      // Complete the animation of the progress bar.
+                      setTimeout(() => NProgress.done(), 500);
+                  });
           },
    
           //------------------------------Formetted Numbers -------------------------\\
