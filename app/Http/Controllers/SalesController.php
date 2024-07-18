@@ -1627,6 +1627,13 @@ class SalesController extends Controller
          $sale['payment_status']         = $sale_data->payment_statut;
          $sale['sold_by']                    = $sale_data->user_id;
          $sale['notes']                    = $sale_data->notes;
+         $sale['final_amount']                    = $sale_data->GrandTotal;
+
+         if($sale_data->discount_type == 'fixed'){
+            $sale['discount_amount']           = $this->render_price_with_symbol_placement(number_format($sale_data->discount, 2, '.', ','));
+        }else{
+            $sale['discount_amount']           = $this->render_price_with_symbol_placement(number_format($sale_data->discount_percent_total, 2, '.', ',')) .' '.'('.$sale_data->discount .' '.'%)';
+        }
 
          $detail_id = 0;
          foreach ($sale_data['details'] as $detail) {
@@ -1646,7 +1653,7 @@ class SalesController extends Controller
  
                  $data['detail_id'] = $detail_id += 1;
                  $data['quantity'] = number_format($detail->quantity, 0, '.', '');
-                 $data['total'] = number_format($detail->total, 2, '.', ' ');
+                 $data['total'] = number_format($detail->total, 2, '.', '');
                  $data['unitSale'] = $unit?$unit->ShortName:'';
                  $data['price'] = number_format($detail->price, 2, '.', ' ');
  
@@ -1671,6 +1678,8 @@ class SalesController extends Controller
              $data['is_imei'] = $detail['product']['is_imei'];
              $data['imei_number'] = $detail->imei_number;
              $data['optional_pname'] = $detail->optional_pname;
+             $data['indi_tax_rate'] = $detail->TaxNet;
+             $data['tax_method'] = $detail->tax_method;
  
              $details[] = $data;
          }

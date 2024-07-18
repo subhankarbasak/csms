@@ -16,8 +16,7 @@ $image_path = '\images\\'.$setting['logo'];
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge"> -->
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>{{$sale['Ref']}}</title>
     <link rel="stylesheet" href="{{ public_path() . $css_path }}">
     <meta name="description" content="">
@@ -147,24 +146,25 @@ $image_path = '\images\\'.$setting['logo'];
             width: 100%;
         }
         tr.item.heading-tow {
-            background: #f8f8f8;
+            /* background: #f8f8f8; */
         }
         tr.item.heading-tow {
-            background: #f8f8f8;
+            /* background: #f8f8f8; */
         }
 
 
 
 
         .invoice-box table tr.heading td{
-            background: #363636;
-            color: #fff;
+            background: #f8f8f8;
+            /* background: #363636; */
+            /* color: #fff; */
             padding: 6px;
         }
 
         .status{
             border: 1px solid #a9a9a9;
-            margin-top: 40px;
+            margin-top: 10px;
             display: flex;
             align-items: center;
         }
@@ -229,7 +229,7 @@ $image_path = '\images\\'.$setting['logo'];
             line-height: 1.5715;
             color: #000000d9;
             border-top: 1px solid rgba(0, 0, 0, .7);
-            margin: 30px 0;
+            margin: 10px 0px 5px 0px;
         }
         .trem span{
             font-size: 13px;
@@ -290,8 +290,8 @@ $image_path = '\images\\'.$setting['logo'];
     <div class="invoice-box">
         <table class="company-details" cellpadding="0" cellspacing="0" style="width: 100%">
 			<tr>
-				<td style="padding-bottom: 20px;">
-					<img src="{{ public_path() . $image_path }}" style="width: 200px; margin-top: 5px;" />
+				<td style="padding-bottom: 5px;">
+					<img src="{{ public_path() . $image_path }}" style="width: 150px; margin-top: 2px;" />
 				</td>
 				<td style="margin-left: 100px; padding-left: 30%; padding-bottom: 20px;">
 					<table style="width: 100%">
@@ -324,7 +324,7 @@ $image_path = '\images\\'.$setting['logo'];
                                     <td class="space-3" style="font-weight: bold;">{{ __('Order Status') }} </td>
                                     <td class="space-3 text-right">{{ $sale['statut'] }}</td>
                                 </tr>
-                                <tr>
+                                <tr style="display: none">
                                     <td class="space-3" style="font-weight: bold;">Sold By</td>
                                     <td class="space-3 text-right">{{ \App\Models\User::getUserNameById($sale['sold_by']) }}</td>
                                 </tr>
@@ -334,8 +334,7 @@ $image_path = '\images\\'.$setting['logo'];
 				</td>
 			</tr>
 		</table>
-
-        <table class="information"  cellpadding="4px" cellspacing="0" style="border: 1px solid #a9a9a9;">
+        <table class="information"  cellpadding="2px" cellspacing="0" style="border: 1px solid #a9a9a9;">
             <tr class="heading" >
                 <td style="width: 40%; padding: 12px;" >
                     Seller
@@ -365,20 +364,25 @@ $image_path = '\images\\'.$setting['logo'];
                 </td>
             </tr>
         </table>
+        <br>
         <div class="table-two">
             <table cellpadding="4px" cellspacing="0">
 
                 <tbody>
                     <tr class="heading">
-                        <td>#</td>
-                        <td>{{ __('translate.Product_Name') }}</td>
-                        <td>{{ __('translate.Qty') }}</td>
-                        <td>{{ __('translate.Unit_Price') }}</td>
-                        <td>{{ __('translate.SubTotal') }}</td>
+                        <td style="border: 1px solid #a9a9a9;">Sl.</td>
+                        <td style="border: 1px solid #a9a9a9;">{{ __('Name of the Item') }}</td>
+                        <td style="border: 1px solid #a9a9a9;">{{ __('translate.Qty') }}</td>
+                        <td style="border: 1px solid #a9a9a9;">{{ __('Rate') }}</td>
+                        <td style="border: 1px solid #a9a9a9;">{{ __('translate.Discount') }}</td>
+                        <td style="border: 1px solid #a9a9a9;">{{ __('GST (Rs.)') }}</td>
+                        <td style="border: 1px solid #a9a9a9;">{{ __('Total (Rs.)') }}</td>
                     </tr>
 
                     @php
                         $totalAmount = 0; // Initialize total amount variable
+                        $gst_amount = 0;
+                        $each_total_discount = 0;
                     @endphp
                     @foreach ($details as $detail)
                     <tr class="item heading-tow">
@@ -395,11 +399,22 @@ $image_path = '\images\\'.$setting['logo'];
                         </td>
                         <td>{{$detail['quantity']}} {{$detail['unitSale']}}</td>
                         <td>{{$detail['price']}}</td>
+                        <td>{{$detail['DiscountNet']}}</td>
+                        <td>
+                            {{$detail['taxe']}} ({{$detail['indi_tax_rate']}}%)
+                            @if($detail['tax_method'] == 1)
+                                [{{__('excl.')}}]
+                            @else
+                                [{{__('incl.')}}]
+                            @endif
+                        </td>
                         <td>{{$detail['total']}}</td>
                     </tr>
 
                         @php
                             $totalAmount += $detail['total']; // Accumulate total amount
+                            $gst_amount += $detail['taxe'];
+                            $each_total_discount += $detail['DiscountNet'];
                         @endphp
                     @endforeach
                 </tbody>
@@ -421,7 +436,7 @@ $image_path = '\images\\'.$setting['logo'];
                                 <span>{{ __('translate.Due') }}: {{$sale['due']}}</span>
                                 @if($paymentSales)
                                 <span class="paid">
-                                    {{ __('Payment By') }}: 
+                                    {{ __('Paid By') }}: 
                                     {{ $paymentSales->paymentMethod->title ?? '' }}
                                 </span>
                                 @endif
@@ -437,25 +452,31 @@ $image_path = '\images\\'.$setting['logo'];
 
                                     <tr class="item-four">
                                         <td>{{ __('translate.SubTotal') }}</td>
-                                        <td>₹ {{ number_format($totalAmount, 2) }}</td>
+                                        <td>Rs. {{ number_format($totalAmount, 2) }}</td>
                                     </tr>
                                     <tr class="item-four">
-                                        <td>{{ __('translate.Discount') }}</td>
-                                        <td>{{$sale['discount']}}</td>
+                                        <td>{{ __('Overall Discount') }}</td>
+                                        <td>{{ $sale['discount_amount'] }}</td>
                                     </tr>
                                     <tr class="item-four">
-                                        <td>{{ __('GST') }}</td>
-                                        <td>{{$sale['TaxNet']}} ({{$sale['tax_rate']}} %)</td>
+                                        <td>{{ __('GST (Rs.)') }}</td>
+                                        <td>
+                                            @if($sale['TaxNet'] !== 'Rs. 0.00')
+                                                {{$sale['TaxNet']}} ({{$sale['tax_rate']}} %)
+                                            @else
+                                                Rs. {{number_format($gst_amount, 2) }}
+                                            @endif
+                                        </td>
                                     </tr>
-                                    @if($sale['shipping'] != '₹ 0.00')
+                                    @if($sale['shipping'] != 'Rs. 0.00')
                                     <tr class="item-four">
                                         <td>{{ __('translate.Shipping') }}</td>
                                         <td>{{$sale['shipping']}}</td>
                                     </tr>
                                     @endif
                                     <tr class="item-four">
-                                        <td style="border-bottom: 0px;"><b>{{ __('translate.Total') }}</b></td>
-                                        <td style="border-bottom: 0px;">{{$sale['GrandTotal']}}</td>
+                                        <td><b>{{ __('translate.Total') }}</b></td>
+                                        <td>{{$sale['GrandTotal']}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -463,31 +484,32 @@ $image_path = '\images\\'.$setting['logo'];
                     </td>
                 </tr>
             </table>
-
+            <!-- app/Helpers/NumberToWords.php -->
+            <div style="padding: 5px;">AMOUNT IN WORDS(Rs): Rupees {{ amountToWords($sale['final_amount']) }} </div>
         </div>
 
         <div class="mt-20">
-			<div style="width: 65%; float: left;">
+			<div style="width: 60%; float: left;">
 				<p class="mt-20" style="font-weight: bold; font-size: 14px;">
                     {{ __('Notes') }}:
                 </p>
                 <p>{{ $sale['notes'] }}</p>
 			</div>
-			<div style="width: 30%; float: right;">
+			<div style="width: 40%; float: right;">
 				<div class="signertuer">
                     <div>
-                        <span>Authorized person</span>
+                        <span>For {{$setting['CompanyName']}}</span>
                         <!-- <img src="#"  style="width: 200px; margin-top: 5px;" /> -->
                         </span>
                     </div>
                 </div>
+                <p style="margin-top:50px;">( {{ \App\Models\User::getUserNameById($sale['sold_by']) }} )</p>
 			</div>
 			<div class="clearfix"></div>
 		</div>
 
-
         <div class="divider"></div>
-        <table cellpadding="4px" cellspacing="0" style="width: 100%">
+        <table cellpadding="1px" cellspacing="0" style="width: 100%">
             <tr>
                 <td style="width: 56%; vertical-align:top;">
                     <span style="font-weight: bold;">{{ __('Terms & Conditions') }}</span>
@@ -502,19 +524,19 @@ $image_path = '\images\\'.$setting['logo'];
                     <span style="font-weight: bold;">Bank Details</span>
                     <table cellpadding="0" cellspacing="0" style="width: 100%">
                         <tr>
+                            <td class="space-3">{{ __('Account Name :') }}</td>
+                            <td class="space-3 text-right"></td>
+                        </tr>
+                        <tr>
                             <td class="space-3">{{ __('Bank Name :') }}</td>
                             <td class="space-3 text-right"></td>
                         </tr>
                         <tr>
-                            <td class="space-3">{{ __('Branch Name :') }}</td>
+                            <td class="space-3">{{ __('Account No. :') }} </td>
                             <td class="space-3 text-right"></td>
                         </tr>
                         <tr>
                             <td class="space-3">{{ __('IFSC Code :') }} </td>
-                            <td class="space-3 text-right"></td>
-                        </tr>
-                        <tr>
-                            <td class="space-3">{{ __('A/c No. :') }} </td>
                             <td class="space-3 text-right"></td>
                         </tr>
                     </table>
