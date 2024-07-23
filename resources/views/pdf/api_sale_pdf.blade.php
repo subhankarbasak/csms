@@ -16,13 +16,21 @@ $image_path = '\images\\'.$setting['logo'];
    <head>
       <meta charset="utf-8">
       <title>{{$sale['Ref']}}</title>
-      <link rel="stylesheet" href="{{ public_path() . $css_path }}">
+      @if(config('app.env') === 'live')
+         <link rel="stylesheet" href="{{ asset('assets/styles/vendor/pdf_style.css') }}">
+      @else
+         <link rel="stylesheet" href="{{ public_path() . $css_path }}">
+      @endif
    </head>
 
    <body>
       <div class="clearfix">
          <div id="logo">
-         <img src="{{ public_path() . $image_path }}">
+         @if(config('app.env') === 'live')
+            <img src="{{asset('images/'.$setting['logo'])}}">
+         @else
+            <img src="{{ public_path() . $image_path }}">
+         @endif
          </div>
          <div id="company">
             <div><strong> {{ __('translate.Date') }} </strong>{{$sale['date']}}</div>
