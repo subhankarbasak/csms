@@ -518,7 +518,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (43, '2024_05_24_174826_create_payment_sales_table', 1),
 (44, '2024_05_24_175211_create_payment_sale_returns_table', 1),
 (45, '2024_07_22_224822_add_previous_due_to_clients_table', 2),
-(46, '2024_07_23_132413_add_gst_details_to_sales_table', 2);
+(46, '2024_07_23_132413_add_gst_details_to_sales_table', 2),
+(47, '2024_07_24_002904_add_gst_no_to_settings_table', 3);
 
 -- --------------------------------------------------------
 
@@ -1740,15 +1741,16 @@ CREATE TABLE `settings` (
   `symbol_placement` varchar(192) NOT NULL DEFAULT 'before',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `gst_no` varchar(191) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `settings`
 --
 
-INSERT INTO `settings` (`id`, `currency_id`, `client_id`, `warehouse_id`, `email`, `app_name`, `CompanyName`, `CompanyPhone`, `CompanyAdress`, `logo`, `invoice_footer`, `footer`, `developed_by`, `default_language`, `default_sms_gateway`, `symbol_placement`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, NULL, NULL, 'admin@smartstock.in', 'CSMS', 'Sarkar Enterprises', '9475620401/9851564940', 'Mirjaur more, Old Malda Road, Malda', 'logo-default.png', NULL, 'CSMS - Customize Stock Management System', 'Lightangle Technologies', 'en', 'twilio', 'before', '2024-06-23 08:33:34', '2024-06-23 08:33:34', NULL);
+INSERT INTO `settings` (`id`, `currency_id`, `client_id`, `warehouse_id`, `email`, `app_name`, `CompanyName`, `CompanyPhone`, `CompanyAdress`, `logo`, `invoice_footer`, `footer`, `developed_by`, `default_language`, `default_sms_gateway`, `symbol_placement`, `created_at`, `updated_at`, `deleted_at`, `gst_no`) VALUES
+(1, 1, NULL, NULL, 'admin@smartstock.in', 'CSMS', 'Sarkar Enterprises', '9475620401/9851564940', 'Mirjaur more, Old Malda Road, Malda', 'logo-default.png', NULL, 'CSMS - Customize Stock Management System', 'Lightangle Technologies', 'en', 'twilio', 'before', '2024-06-23 08:33:34', '2024-06-23 08:33:34', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -2419,7 +2421,7 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
 -- AUTO_INCREMENT for table `payment_methods`
