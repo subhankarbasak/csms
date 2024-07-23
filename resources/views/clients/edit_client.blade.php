@@ -73,6 +73,41 @@
                             </span>
                         </div>
 
+                        <div class="form-group col-md-4">
+                            <label for="has_due">Previous Any Dues?</label>
+                            <select v-model="client.has_due" class="form-control" id="has_due">
+                                <option value="no">No</option>
+                                <option value="yes">Yes</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group col-md-4" v-if="client.has_due === 'yes'">
+                            <label for="previous_due">{{ __('translate.previous_due') }}</label>
+                            <input type="number" v-model="client.previous_due" class="form-control" id="previous_due"
+                                placeholder="{{ __('translate.Enter_previous_due') }}">
+                            <span class="error" v-if="errors && errors.previous_due">
+                                @{{ errors.previous_due[0] }}
+                            </span>
+                        </div>
+
+                        <div class="form-group col-md-4" v-if="client.has_due === 'yes'">
+                            <label for="previous_due_date">{{ __('translate.previous_due_date') }}</label>
+                            <input type="date" v-model="client.previous_due_date" class="form-control" id="previous_due_date"
+                                placeholder="{{ __('translate.Enter_previous_due_date') }}">
+                            <span class="error" v-if="errors && errors.previous_due_date">
+                                @{{ errors.previous_due_date[0] }}
+                            </span>
+                        </div>
+
+                        <div class="form-group col-md-4" v-if="client.has_due === 'yes'">
+                            <label for="previous_due_notes">{{ __('translate.previous_due_notes') }}</label>
+                            <input type="text" v-model="client.previous_due_notes" class="form-control" id="previous_due_notes"
+                                placeholder="{{ __('translate.Enter_previous_due_notes') }}">
+                            <span class="error" v-if="errors && errors.previous_due_notes">
+                                @{{ errors.previous_due_notes[0] }}
+                            </span>
+                        </div>
+
                         <div class="form-group col-md-8">
                             <label for="address">{{ __('translate.Address') }}</label>
                             <textarea v-model="client.address" class="form-control" name="address"
@@ -142,6 +177,10 @@
                 self.data.append("phone", self.client.phone);
                 self.data.append("address", self.client.address);
                 self.data.append("gst_no", self.client.gst_no);
+                self.data.append("has_due", self.client.has_due);
+                self.data.append("previous_due", self.client.previous_due);
+                self.data.append("previous_due_date", self.client.previous_due_date);
+                self.data.append("previous_due_notes", self.client.previous_due_notes);
                 if(self.old_photo != self.client.photo){
                  self.data.append("photo", self.client.photo);
                 }

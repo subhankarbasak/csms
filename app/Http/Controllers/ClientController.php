@@ -240,6 +240,8 @@ class ClientController extends Controller
             $request->validate([
                 'username' => 'required',
                 'photo'          => 'nullable|image|mimes:jpeg,png,jpg,bmp,gif,svg|max:2048',
+                'previous_due' => 'nullable|numeric|min:0',
+                'has_due' => 'required|in:yes,no',
             ]);
 
             if ($request->hasFile('photo')) {
@@ -251,8 +253,25 @@ class ClientController extends Controller
             } else {
                 $filename = 'no_avatar.png';
             }
+
+            // dd($request['has_due']);
+            if($request['gst_no']){
+                $gst = true;
+            }else{
+                $gst = false;
+            }
+
+            if($request['has_due'] == 'no'){
+                // $previous_due = 0.0;
+                $previous_due_date = null;
+                $previous_due_notes = null;
+            }else{
+                // $previous_due = $request['previous_due'];
+                $previous_due_date = $request['previous_due_date'];
+                $previous_due_notes = $request['previous_due_notes'];
+            }
             
-            Client::create([
+            $client = Client::create([
 
                 'user_id'        => $user_auth->id,
                 'username'       => $request['username'],
@@ -261,10 +280,33 @@ class ClientController extends Controller
                 'city'           => $request['city'],
                 'phone'          => $request['phone'],
                 'address'        => $request['address'],
+                'is_gst'        => $gst,
                 'gst_no'        => $request['gst_no'],
+                'has_due'        => $request['has_due'],
+                'previous_due'        => $request['previous_due'],
+                'previous_due_date'        => $previous_due_date,
+                'previous_due_notes'        => $previous_due_notes,
                 'status'         => 1,
                 'photo'          => $filename,
             ]);
+
+            if ($request->has('previous_due') && $request->input('previous_due') > 0) {
+                Sale::create([
+                    'user_id' => auth()->id(),
+                    'date' => $request->input('previous_due_date'),
+                    'Ref' => 'Previous Year Due',
+                    'client_id' => $client->id,
+                    'GrandTotal' => $request->input('previous_due'),
+                    'notes' => $request->input('previous_due_notes'),
+                    'is_gst' => $client->is_gst,
+                    'gst_no' => $client->gst_no,
+                    'warehouse_id' => '1',
+                    'discount_type' => 'fixed',
+                    'payment_statut' => 'unpaid',
+                    'statut' => 'completed',
+                    // Other fields as necessary
+                ]);
+            }
 
             return response()->json(['success' => true]);
         }
@@ -389,6 +431,12 @@ class ClientController extends Controller
             $this->validate($request, [
                 'username' => 'required|string|max:255',
                 'photo'          => 'nullable|image|mimes:jpeg,png,jpg,bmp,gif,svg|max:2048',
+                'is_gst' => 'nullable|boolean',
+                'gst_no' => 'nullable|string|max:255',
+                'has_due' => 'required|in:yes,no',
+                'previous_due' => 'required_if:has_due,yes|nullable|numeric|min:0',
+                'previous_due_date' => 'required_if:has_due,yes|nullable|date',
+                'previous_due_notes' => 'required_if:has_due,yes|nullable|string',
             ]);
 
             $user = Client::findOrFail($id);
@@ -413,16 +461,60 @@ class ClientController extends Controller
                 $filename = $currentAvatar;
             }
 
+            if($request['gst_no']){
+                $gst = true;
+            }else{
+                $gst = false;
+            }
+
+            if($request['has_due'] == 'no'){
+                // $previous_due = 0.0;
+                $previous_due_date = null;
+                $previous_due_notes = null;
+            }else{
+                // $previous_due = $request['previous_due'];
+                $previous_due_date = $request['previous_due_date'];
+                $previous_due_notes = $request['previous_due_notes'];
+            }
+
             $client = Client::whereId($id)->update([
                 'username'       => $request['username'],
                 'email'          => $request['email'],
                 'city'           => $request['city'],
                 'phone'          => $request['phone'],
                 'address'        => $request['address'],
+                'is_gst'        => $gst,
                 'gst_no'        => $request['gst_no'],
+                'has_due'        => $request['has_due'],
+                'previous_due'        => $request['previous_due'],
+                'previous_due_date'        => $previous_due_date,
+                'previous_due_notes'        => $previous_due_notes,
                 'status'         => 1,
                 'photo'          => $filename,
             ]);
+
+            if ($request->has('has_due') && $request->input('has_due') === 'yes' && $request->input('previous_due') > 0) {
+                Sale::withTrashed()->updateOrCreate(
+                    ['client_id' => $id, 'Ref' => 'Previous Year Due'], // Assuming 'Ref' is unique for previous dues
+                    [
+                        'user_id' => auth()->id(),
+                        'date' => $request->input('previous_due_date'),
+                        'Ref' => 'Previous Year Due',
+                        'GrandTotal' => $request->input('previous_due'),
+                        'notes' => $request->input('previous_due_notes'),
+                        'is_gst' => $request->input('is_gst'),
+                        'gst_no' => $request->input('gst_no'),
+                        'warehouse_id' => '1',
+                        'discount_type' => 'fixed',
+                        'payment_statut' => 'unpaid',
+                        'statut' => 'completed',
+                        // Other fields as necessary
+                    ]
+                )->restore();
+            } else {
+                // Soft delete the due record if "has_due" is set to "no"
+                Sale::where('client_id', $id)->where('Ref', 'Previous Year Due')->delete();
+            }
           
             return response()->json(['success' => true]);
         }
@@ -440,9 +532,12 @@ class ClientController extends Controller
         $user_auth = auth()->user();
 		if ($user_auth->can('client_delete')){
 
-            Client::whereId($id)->update([
+            $client = Client::whereId($id)->update([
                 'deleted_at' => Carbon::now(),
             ]);
+
+            // Soft delete related sales records
+            Sale::where('client_id', $id)->delete();
 
             return response()->json(['success' => true]);
 
