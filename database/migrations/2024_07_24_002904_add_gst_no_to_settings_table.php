@@ -26,3 +26,5 @@ return new class extends Migration
         });
     }
 };
+
+// Run: php artisan make:migration add_gst_no_to_settings_table --table=settings

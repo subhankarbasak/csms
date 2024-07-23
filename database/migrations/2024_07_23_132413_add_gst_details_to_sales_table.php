@@ -28,3 +28,5 @@ return new class extends Migration
         });
     }
 };
+
+// Run: php artisan make:migration add_gst_details_to_sales_table --table=sales

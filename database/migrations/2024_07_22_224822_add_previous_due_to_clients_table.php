@@ -36,3 +36,5 @@ return new class extends Migration
         });
     }
 };
+
+// Run: php artisan make:migration add_previous_due_to_clients_table --table=clients
