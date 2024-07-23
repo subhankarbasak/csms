@@ -1748,7 +1748,7 @@ CREATE TABLE `settings` (
 --
 
 INSERT INTO `settings` (`id`, `currency_id`, `client_id`, `warehouse_id`, `email`, `app_name`, `CompanyName`, `CompanyPhone`, `CompanyAdress`, `logo`, `invoice_footer`, `footer`, `developed_by`, `default_language`, `default_sms_gateway`, `symbol_placement`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, NULL, NULL, 'admin@example.com', 'CSMS', 'Sarkar Enterprises', '9876543210', 'Malda, West Bengal', 'logo-default.png', NULL, 'CSMS - Customize Stock Management System', 'Lightangle Technologies', 'en', 'twilio', 'before', '2024-06-23 08:33:34', '2024-06-23 08:33:34', NULL);
+(1, 1, NULL, NULL, 'admin@smartstock.in', 'CSMS', 'Sarkar Enterprises', '9475620401/9851564940', 'Mirjaur more, Old Malda Road, Malda', 'logo-default.png', NULL, 'CSMS - Customize Stock Management System', 'Lightangle Technologies', 'en', 'twilio', 'before', '2024-06-23 08:33:34', '2024-06-23 08:33:34', NULL);
 
 -- --------------------------------------------------------
 

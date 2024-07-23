@@ -94,7 +94,7 @@
                         <div class="form-group col-md-4" v-if="client.has_due === 'yes'">
                             <label for="previous_due_notes">{{ __('translate.previous_due_notes') }}</label>
                             <input type="text" v-model="client.previous_due_notes" class="form-control" id="previous_due_notes"
-                                placeholder="{{ __('translate.Enter_previous_due_notes') }}">
+                                placeholder="{{ __('translate.previous_due_notes') }}">
                             <span class="error" v-if="errors && errors.previous_due_notes">
                                 @{{ errors.previous_due_notes[0] }}
                             </span>

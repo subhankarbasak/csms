@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+<?php
+    $setting = DB::table('settings')->where('deleted_at', '=', null)->first();
+?>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -12,7 +15,7 @@
                         @csrf
                         <span class="text-center">
                             <div class="auth-logo text-center mb-4">
-                                <img src="{{asset('images/logo.svg')}}" alt="">
+                                <img src="{{asset('images/'.$setting->logo)}}" alt="" style="width:120px!important; height:auto!important;">
                             </div>
                         <h4>{{ __('translate.Sign_in_to_account') }}</h4>
                         <p>{{ __('translate.Enter_your_email_password_to_login') }}</p>
@@ -36,7 +39,10 @@
                             <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
 
                             <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+                                <div class="input-group">
+                                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+                                    <button type="button" class="btn btn-outline-secondary" id="togglePassword">Show</button>
+                                </div>
 
                                 @error('password')
                                     <span class="invalid-feedback" role="alert">
@@ -77,4 +83,24 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const togglePassword = document.querySelector('#togglePassword');
+            const password = document.querySelector('#password');
+
+            togglePassword.addEventListener('click', function() {
+                if (password.type === 'password') {
+                    password.type = 'text';
+                    togglePassword.textContent = 'Hide';
+                } else {
+                    password.type = 'password';
+                    togglePassword.textContent = 'Show';
+                }
+            });
+        });
+    </script>
+@endpush
+
 @endsection

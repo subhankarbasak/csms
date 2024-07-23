@@ -1,3 +1,6 @@
+<?php
+    $setting = DB::table('settings')->where('deleted_at', '=', null)->first();
+?>
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -7,7 +10,8 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'CSMS') }} {{ __('- Lightangle Technologies') }}</title>
+    <!-- <title>{{ config('app.name', 'CSMS') }} {{ __('- Lightangle Technologies') }}</title> -->
+    <title>{{ $setting->CompanyName ? $setting->CompanyName : 'CSMS' }} {{ __('- Lightangle Technologies') }}</title>
     <meta name="Description" content="Lightangle Technologies - Customized Stock Management System">
     <meta name="author" content="Lightangle Technologies">
     <meta name="keywords" content="Lightangle Technologies - Customized Stock Management System">    
@@ -27,7 +31,7 @@
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'CSMS') }}
+                    {{ $setting->CompanyName ? $setting->CompanyName : 'CSMS' }}
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -44,7 +48,7 @@
                         <!-- Authentication Links -->
                         @guest
                             @if (Route::has('login'))
-                                <li class="nav-item">
+                                <li class="nav-item d-none">
                                     <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
                                 </li>
                             @endif
@@ -98,5 +102,7 @@
       });
     });
   </script>
+
+    @stack('scripts')
 </body>
 </html>

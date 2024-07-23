@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+<?php
+    $setting = DB::table('settings')->where('deleted_at', '=', null)->first();
+?>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -11,7 +14,7 @@
                     <form method="POST" action="{{ route('password.update') }}">
                         @csrf
                         <div class="auth-logo text-center mb-4">
-                            <img src="{{asset('images/logo.svg')}}" alt="">
+                        <img src="{{asset('images/'.$setting->logo)}}" alt="" style="width:120px!important; height:auto!important;">
                         </div>
 
                         <input type="hidden" name="token" value="{{ $token }}">
