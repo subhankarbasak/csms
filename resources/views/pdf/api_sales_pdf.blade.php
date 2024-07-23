@@ -18,7 +18,11 @@ $image_path = '\images\\'.$setting['logo'];
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>{{$sale['Ref']}}</title>
-    <link rel="stylesheet" href="{{ public_path() . $css_path }}">
+    @if(config('app.env') === 'live')
+         <link rel="stylesheet" href="{{ asset('assets/styles/vendor/pdf_style.css') }}">
+      @else
+         <link rel="stylesheet" href="{{ public_path() . $css_path }}">
+      @endif
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -290,8 +294,12 @@ $image_path = '\images\\'.$setting['logo'];
     <div class="invoice-box">
         <table class="company-details" cellpadding="0" cellspacing="0" style="width: 100%">
 			<tr>
-				<td style="padding-bottom: 5px;">
-					<img src="{{ public_path() . $image_path }}" style="width: 150px; margin-top: 2px;" />
+				<td style="padding-bottom: 5px;">                   
+                    @if(config('app.env') === 'live')
+                        <img src="{{asset('images/'.$setting['logo'])}}" style="width: 150px; margin-top: 2px;" />
+                    @else
+                        <img src="{{ public_path() . $image_path }}" style="width: 150px; margin-top: 2px;" />
+                    @endif
 				</td>
 				<td style="margin-left: 100px; padding-left: 30%; padding-bottom: 20px;">
 					<table style="width: 100%">
