@@ -248,7 +248,7 @@
 
                 <!-- Paying_Amount -->
                 <div class="form-group col-md-6">
-                  <validation-provider name="Montant à payer" :rules="{ required: true , regex: /^\d*\.?\d*$/}"
+                  <validation-provider name="Amount to be paid" :rules="{ required: true , regex: /^\d*\.?\d*$/}"
                     v-slot="validationContext">
                     <label for="Paying_Amount">{{ __('translate.Paying_Amount') }}
                       <span class="field_required">*</span></label>

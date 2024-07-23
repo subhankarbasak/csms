@@ -1023,7 +1023,7 @@
         NProgress.set(0.1);
         
         axios
-            .get('/Sale_PDF/'+ id, {
+            .get('/api/v1/pdf/'+ id, {
             responseType: "blob", // important
             headers: {
                 "Content-Type": "application/json"
