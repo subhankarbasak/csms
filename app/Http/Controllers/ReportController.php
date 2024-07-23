@@ -1394,18 +1394,21 @@ class ReportController extends Controller
                 1 => '=',
                 2 => 'like',
                 3 => '=',
+                4 => '=',
             );
             $columns = array(
                 0 => 'Ref',
                 1 => 'client_id',
                 2 => 'payment_statut',
                 3 => 'warehouse_id',
+                4 => 'is_gst',
             );
 
             $columns_order = array( 
                 0 => 'id', 
                 1 => 'date', 
                 2 => 'Ref', 
+                10 => 'gst_no', 
             );
 
             $start = $request->input('start');
@@ -1445,6 +1448,7 @@ class ReportController extends Controller
                 return $query->when($request->filled('search'), function ($query) use ($request) {
                     return $query->where('Ref', 'LIKE', "%{$request->input('search.value')}%")
                         ->orWhere('payment_statut', 'like', "%{$request->input('search.value')}%")
+                        ->orWhere('gst_no', 'like', "%{$request->input('search.value')}%")
                         ->orWhere(function ($query) use ($request) {
                             return $query->whereHas('client', function ($q) use ($request) {
                                 $q->where('username', 'LIKE', "%{$request->input('search.value')}%");
@@ -1486,6 +1490,8 @@ class ReportController extends Controller
                 $item['GrandTotal']     = number_format($sale->GrandTotal, 2, '.', ',');
                 $item['paid_amount']    = number_format($sale->paid_amount, 2, '.', ',');
                 $item['due']            = number_format($sale->GrandTotal - $sale->paid_amount, 2, '.', ',');
+                $item['is_gst']            = $sale->is_gst;
+                $item['gst_no']            = $sale->gst_no;
               
 
                 //payment_status

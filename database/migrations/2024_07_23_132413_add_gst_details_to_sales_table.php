@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('sales', function (Blueprint $table) {
-            $table->boolean('is_gst')->nullable();
+            $table->string('is_gst', 10)->default('no');
             $table->string('gst_no', 191)->nullable();
         });
     }

@@ -214,12 +214,12 @@
             <div class="form-group col-md-4">
                 <label for="is_gst">{{ __('Is GST Applicable?') }}</label>
                 <select class="form-select" v-model="sale.is_gst">
-                    <option value="0">{{ __('No') }}</option>
-                    <option value="1">{{ __('Yes') }}</option>
+                    <option value="no">{{ __('No') }}</option>
+                    <option value="yes">{{ __('Yes') }}</option>
                 </select>
             </div>
 
-            <div class="form-group col-md-4" v-if="sale.is_gst == 1">
+            <div class="form-group col-md-4" v-if="sale.is_gst == 'yes'">
                 <label for="gst_no">{{ __('GST Number') }}</label>
                 <input type="text" class="form-control" v-model="sale.gst_no">
             </div>
@@ -702,7 +702,7 @@
             discount: 0,
             discount_type:"fixed",
             discount_percent_total: 0,
-            is_gst: 0,
+            is_gst: "no",
             gst_no: "",
           },
           payment: {
@@ -757,7 +757,7 @@ watch: {
             let selectedClient = this.clients.find(client => client.id === newVal);
             if (selectedClient) {
                 // Update gst_no if is_gst is 1 (Yes)
-                if (this.sale.is_gst == 1) {
+                if (this.sale.is_gst == 'yes') {
                     this.sale.gst_no = selectedClient.gst_no;
                 }
             }

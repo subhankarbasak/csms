@@ -256,9 +256,9 @@ class ClientController extends Controller
 
             // dd($request['has_due']);
             if($request['gst_no']){
-                $gst = true;
+                $gst = 'yes';
             }else{
-                $gst = false;
+                $gst = 'no';
             }
 
             if($request['has_due'] == 'no'){
@@ -294,7 +294,7 @@ class ClientController extends Controller
                 Sale::create([
                     'user_id' => auth()->id(),
                     'date' => $request->input('previous_due_date'),
-                    'Ref' => 'Previous Year Due',
+                    'Ref' => 'Previous Due',
                     'client_id' => $client->id,
                     'GrandTotal' => $request->input('previous_due'),
                     'notes' => $request->input('previous_due_notes'),
@@ -462,9 +462,9 @@ class ClientController extends Controller
             }
 
             if($request['gst_no']){
-                $gst = true;
+                $gst = 'yes';
             }else{
-                $gst = false;
+                $gst = 'no';
             }
 
             if($request['has_due'] == 'no'){
@@ -495,14 +495,14 @@ class ClientController extends Controller
 
             if ($request->has('has_due') && $request->input('has_due') === 'yes' && $request->input('previous_due') > 0) {
                 Sale::withTrashed()->updateOrCreate(
-                    ['client_id' => $id, 'Ref' => 'Previous Year Due'], // Assuming 'Ref' is unique for previous dues
+                    ['client_id' => $id, 'Ref' => 'Previous Due'], // Assuming 'Ref' is unique for previous dues
                     [
                         'user_id' => auth()->id(),
                         'date' => $request->input('previous_due_date'),
-                        'Ref' => 'Previous Year Due',
+                        'Ref' => 'Previous Due',
                         'GrandTotal' => $request->input('previous_due'),
                         'notes' => $request->input('previous_due_notes'),
-                        'is_gst' => $request->input('is_gst'),
+                        'is_gst' => $gst,
                         'gst_no' => $request->input('gst_no'),
                         'warehouse_id' => '1',
                         'discount_type' => 'fixed',
@@ -513,7 +513,7 @@ class ClientController extends Controller
                 )->restore();
             } else {
                 // Soft delete the due record if "has_due" is set to "no"
-                Sale::where('client_id', $id)->where('Ref', 'Previous Year Due')->delete();
+                Sale::where('client_id', $id)->where('Ref', 'Previous Due')->delete();
             }
           
             return response()->json(['success' => true]);

@@ -39,6 +39,7 @@
                             <th>{{ __('translate.Paid') }}</th>
                             <th>{{ __('translate.Due') }}</th>
                             <th>{{ __('translate.Payment_Status') }}</th>
+                            <th>{{ __('translate.gst_no') }}</th>
                         </tr>
                     </thead>
                     <tbody class="height_140">
@@ -120,6 +121,17 @@
                                 </select>
                             </div>
 
+
+                            <div class="form-group col-md-6">
+                                <label for="is_gst" class="ul-form__label">{{ __('translate.is_gst') }}
+                                </label>
+                                <select name="is_gst" id="is_gst" class="form-control">
+                                    <option value="0">{{ __('translate.All') }}</option>
+                                    <option value="yes">{{ __('translate.gst_only') }}</option>
+                                    <option value="no">{{ __('translate.without_gst') }}</option>
+                                </select>
+                            </div>
+
                         </div>
 
                         <div class="row mt-3">
@@ -169,9 +181,10 @@
                 var payment_statut = $('#payment_status').val();
                 let client_id = $('#client_id').val();
                 let warehouse_id = $('#warehouse_id').val();
+                let is_gst = $('#is_gst').val();
 
                 $('#sale_table').DataTable().destroy();
-                sale_datatable(start_date, end_date, Ref,client_id, payment_statut,warehouse_id);
+                sale_datatable(start_date, end_date, Ref,client_id, payment_statut,warehouse_id, is_gst);
 
             });
 
@@ -200,7 +213,7 @@
 
 
             //Get Data
-            function sale_datatable(start_date ='', end_date ='', Ref ='',client_id ='', payment_statut ='',warehouse_id =''){
+            function sale_datatable(start_date ='', end_date ='', Ref ='',client_id ='', payment_statut ='',warehouse_id ='', is_gst=''){
                 var $symbol_placement = @json($symbol_placement);
                 var table = $('#sale_table').DataTable({
                     processing: true,
@@ -227,6 +240,7 @@
                             client_id: client_id == '0'?'':client_id,
                             warehouse_id: warehouse_id == '0'?'':warehouse_id,
                             payment_statut: payment_statut == '0'?'':payment_statut,
+                            is_gst: is_gst == '0'?'':is_gst,
                             "_token": "{{ csrf_token()}}"
                         },
                         dataType: "json",
@@ -244,6 +258,7 @@
                         {data: 'paid_amount'},
                         {data: 'due'},
                         {data: 'payment_status', name: 'payment_status'},
+                        {data: 'gst_no'},
                     
                     ],
 
@@ -371,6 +386,7 @@
                 var payment_statut = $('#payment_status').val('0');
                 let client_id = $('#client_id').val('0');
                 let warehouse_id = $('#warehouse_id').val('0');
+                let is_gst = $('#is_gst').val('0');
 
             });
 
@@ -395,9 +411,10 @@
                 var payment_statut = $('#payment_status').val();
                 let client_id = $('#client_id').val();
                 let warehouse_id = $('#warehouse_id').val();
+                let is_gst = $('#is_gst').val();
         
                 $('#sale_table').DataTable().destroy();
-                sale_datatable(start_date, end_date, Ref,client_id, payment_statut,warehouse_id);
+                sale_datatable(start_date, end_date, Ref,client_id, payment_statut,warehouse_id, is_gst);
 
                 $('#filter_sale_report_modal').modal('hide');
             
